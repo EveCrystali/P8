@@ -9,38 +9,65 @@ namespace TripPricer;
 
 public class TripPricer
 {
+    /// <summary>
+    /// Calculates the price for a given trip.
+    /// </summary>
+    /// <param name="apiKey">The API key.</param>
+    /// <param name="attractionId">The ID of the attraction.</param>
+    /// <param name="adults">The number of adults.</param>
+    /// <param name="children">The number of children.</param>
+    /// <param name="nightsStay">The number of nights stay.</param>
+    /// <param name="rewardsPoints">The rewards points.</param>
+    /// <returns>A list of providers with their prices.</returns>
     public List<Provider> GetPrice(string apiKey, Guid attractionId, int adults, int children, int nightsStay, int rewardsPoints)
     {
-        List<Provider> providers = new List<Provider>();
+        List<Provider> providers = [];
         HashSet<string> providersUsed = new HashSet<string>();
 
+        // HACK: certainly supposed to be optimized next to improve performance 
         // Sleep to simulate some latency
         Thread.Sleep(ThreadLocalRandom.Current.Next(1, 50));
 
+        // Calculate the price for each provider
         for (int i = 0; i < 5; i++)
         {
+            // Generate a random multiple for the price calculation
             int multiple = ThreadLocalRandom.Current.Next(100, 700);
-            double childrenDiscount = children / 3.0;
+
+            // Calculate the discount for children based on the number of children
+            double childrenDiscount = (double)children / 3.0;
+
+            // Calculate the price based on the number of adults, number of nights stay, multiple, and rewards points
             double price = multiple * adults + multiple * childrenDiscount * nightsStay + 0.99 - rewardsPoints;
 
+            // Ensure the price is not negative
             if (price < 0.0)
             {
                 price = 0.0;
             }
 
+            // Generate a unique provider name
             string provider;
             do
             {
                 provider = GetProviderName(apiKey, adults);
             } while (providersUsed.Contains(provider));
 
+            // Add the provider to the list of used providers
             providersUsed.Add(provider);
-            providers.Add(new Provider(attractionId, provider, price));
+
+            // Create a new provider object with the attraction ID, provider name, and price
+            Provider newProvider = new(attractionId, provider, price);
+
+            // Add the new provider to the list of providers
+            providers.Add(newProvider);
         }
+
+        // Return the list of providers with their prices
         return providers;
     }
 
-    public string GetProviderName(string apiKey, int adults)
+    public static string GetProviderName(string apiKey, int adults)
     {
         int multiple = ThreadLocalRandom.Current.Next(1, 10);
 

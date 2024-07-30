@@ -99,16 +99,27 @@ namespace TourGuideTest
             Assert.Equal(5, attractions.Count);
         }
 
+
+        // Fixme: expected 10 actual 5
+        /// <summary>
+        /// Test case for the GetTripDeals method of the TourGuideService class.
+        /// This test case verifies that the GetTripDeals method returns the
+        /// expected number of providers. The expected number is 10.
+        /// </summary>
         [Fact]
         public void GetTripDeals()
         {
-            _fixture.Initialize(0);
-            var user = new User(Guid.NewGuid(), "jon", "000", "jon@tourGuide.com");
-            List<Provider> providers = _fixture.TourGuideService.GetTripDeals(user);
+            // Arrange
+            _fixture.Initialize(0); // Initialize the fixture
+            var user = new User(Guid.NewGuid(), "jon", "000", "jon@tourGuide.com"); // Create a test user
 
-            _fixture.TourGuideService.Tracker.StopTracking();
+            // Act
+            List<Provider> providers = _fixture.TourGuideService.GetTripDeals(user); // Get trip deals for the user
 
-            Assert.Equal(10, providers.Count);
+            // Assert
+            _fixture.TourGuideService.Tracker.StopTracking(); // Stop tracking
+
+            Assert.Equal(10, providers.Count); // Verify that the expected number of providers is returned
         }
     }
 }
