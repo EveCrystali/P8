@@ -100,7 +100,7 @@ namespace TourGuideTest
         }
 
 
-        // Fixme: expected 10 actual 5
+        // FIXME: GetTripDeals test failed expected 10 actual 5
         /// <summary>
         /// Test case for the GetTripDeals method of the TourGuideService class.
         /// This test case verifies that the GetTripDeals method returns the
