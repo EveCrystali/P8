@@ -86,18 +86,20 @@ namespace TourGuideTest
             Assert.Equal(user.UserId, visitedLocation.UserId);
         }
 
-        // TODO: Un"skip" this test
-        [Fact(Skip = "Not yet implemented")]
+        // FIXME: GetNearbyAttractions must return a list of 5 and actual is 0. 
+        [Fact]
         public void GetNearbyAttractions()
         {
+            // Arrange
             _fixture.Initialize(0);
             var user = new User(Guid.NewGuid(), "jon", "000", "jon@tourGuide.com");
             var visitedLocation = _fixture.TourGuideService.TrackUserLocation(user);
 
+            // Act
             List<Attraction> attractions = _fixture.TourGuideService.GetNearByAttractions(visitedLocation);
-
             _fixture.TourGuideService.Tracker.StopTracking();
 
+            // Assert
             Assert.Equal(5, attractions.Count);
         }
 
