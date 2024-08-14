@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RewardCentral", "RewardCent
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TourGuideTest", "TourGuideTest\TourGuideTest.csproj", "{690EAAD6-5B9B-4052-8C67-8592AD1CE1AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TourGuideBenchmark", "BenchMark\TourGuideBenchmark.csproj", "{1772B123-9565-4E5E-B21D-05184CC86D31}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TourGuideBenchmark", "TourGuideBenchmark\TourGuideBenchmark.csproj", "{1772B123-9565-4E5E-B21D-05184CC86D31}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

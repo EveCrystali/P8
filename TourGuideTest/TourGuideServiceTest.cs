@@ -101,8 +101,6 @@ namespace TourGuideTest
             Assert.Equal(5, attractions.Count);
         }
 
-
-        // FIXME: GetTripDeals test failed expected 10 actual 5
         /// <summary>
         /// Test case for the GetTripDeals method of the TourGuideService class.
         /// This test case verifies that the GetTripDeals method returns the
@@ -116,19 +114,11 @@ namespace TourGuideTest
             var user = new User(Guid.NewGuid(), "jon", "000", "jon@tourGuide.com"); // Create a test user
 
             // Act
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-
             List<Provider> providers = _fixture.TourGuideService.GetTripDeals(user); // Get trip deals for the user
-
-            stopwatch.Stop();
-            _logger.LogInformation($"GetTripDeals took {stopwatch.ElapsedMilliseconds} ms");
-
-
-            // Assert
             _fixture.TourGuideService.Tracker.StopTracking(); // Stop tracking
 
-            Assert.Equal(5, providers.Count); // Verify that the expected number of providers is returned
+            // Assert
+            Assert.Equal(10, providers.Count); // Verify that the expected number of providers is returned
         }
     }
 }

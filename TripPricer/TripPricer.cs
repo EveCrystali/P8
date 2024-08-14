@@ -26,14 +26,17 @@ public class TripPricer
 
         // HACK: certainly supposed to be optimized next to improve performance 
         // NOTE: Need to monitor the performance of this function to understand why it is slow when the number of providers is high
+        
         // Sleep to simulate some latency
         Thread.Sleep(ThreadLocalRandom.Current.Next(1, 50));
 
-
-        // NOTE: Upgrading i to 10 is the correct choice for making the unit test succeed but the test is taking too long to run -> need to optimize
-        // OPTIMIZE: i = 10
+        // NOTE: i should not be bigger than the number of unique GetProviderName could generate
+        // Otherwise the loop become infinite
         // Calculate the price for each provider
-        for (int i = 0; i < 10; i++)
+
+        int maximum = GetProviderNameCaseCount();
+
+        for (int i = 0; i < maximum; i++)
         {
             // Generate a random multiple for the price calculation
             int multiple = ThreadLocalRandom.Current.Next(100, 700);
@@ -50,12 +53,12 @@ public class TripPricer
                 price = 0.0;
             }
 
-            // Generate a unique provider name
             string provider;
             do
             {
                 provider = GetProviderName(apiKey, adults);
             } while (providersUsed.Contains(provider));
+
 
             // Add the provider to the list of used providers
             providersUsed.Add(provider);
@@ -80,7 +83,8 @@ public class TripPricer
     public static string GetProviderName(string apiKey, int adults)
     {
         // Generate a random multiple between 1 and 10 to select a provider name
-        int multiple = ThreadLocalRandom.Current.Next(1, 10);
+        // NextInt is inclusive of the minimum and exclusive of the maximum !!
+        int multiple = ThreadLocalRandom.Current.Next(1, 11);
 
         // Switch on the multiple to select the provider name
         return multiple switch
@@ -96,6 +100,13 @@ public class TripPricer
             9 => "AdventureCo",
             // Default to Cure-Your-Blues
             _ => "Cure-Your-Blues",
-        };        
+        };
+    }
+
+    public static int GetProviderNameCaseCount()
+    {
+        // HACK: return manually for now
+        // TODO: implement this function to calculate the number of unique provider names automatically using reflexion
+        return 10;
     }
 }
