@@ -1,6 +1,8 @@
 ﻿using GpsUtil.Location;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,16 +15,15 @@ namespace TourGuideTest
 {
     public class TourGuideServiceTour : IClassFixture<DependencyFixture>
     {
+        public ILogger _logger;
         private readonly DependencyFixture _fixture;
 
         public TourGuideServiceTour(DependencyFixture fixture)
         {
             _fixture = fixture;
-        }
+            var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
+            _logger = loggerFactory.CreateLogger<TourGuideServiceTour>();
 
-        public void Dispose()
-        {
-            _fixture.Cleanup();
         }
 
         [Fact]
@@ -85,6 +86,7 @@ namespace TourGuideTest
             Assert.Equal(user.UserId, visitedLocation.UserId);
         }
 
+        // TODO: Un"skip" this test
         [Fact(Skip = "Not yet implemented")]
         public void GetNearbyAttractions()
         {
@@ -99,16 +101,24 @@ namespace TourGuideTest
             Assert.Equal(5, attractions.Count);
         }
 
+        /// <summary>
+        /// Test case for the GetTripDeals method of the TourGuideService class.
+        /// This test case verifies that the GetTripDeals method returns the
+        /// expected number of providers. The expected number is 10.
+        /// </summary>
         [Fact]
         public void GetTripDeals()
         {
-            _fixture.Initialize(0);
-            var user = new User(Guid.NewGuid(), "jon", "000", "jon@tourGuide.com");
-            List<Provider> providers = _fixture.TourGuideService.GetTripDeals(user);
+            // Arrange
+            _fixture.Initialize(0); // Initialize the fixture
+            var user = new User(Guid.NewGuid(), "jon", "000", "jon@tourGuide.com"); // Create a test user
 
-            _fixture.TourGuideService.Tracker.StopTracking();
+            // Act
+            List<Provider> providers = _fixture.TourGuideService.GetTripDeals(user); // Get trip deals for the user
+            _fixture.TourGuideService.Tracker.StopTracking(); // Stop tracking
 
-            Assert.Equal(10, providers.Count);
+            // Assert
+            Assert.Equal(10, providers.Count); // Verify that the expected number of providers is returned
         }
     }
 }

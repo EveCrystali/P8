@@ -44,6 +44,7 @@ namespace TourGuideTest
             _output = output;
         }
 
+        // TODO: Un"skip" this test
         [Fact(Skip = ("Delete Skip when you want to pass the test"))]
         public void HighVolumeTrackLocation()
         {
@@ -67,6 +68,7 @@ namespace TourGuideTest
             Assert.True(TimeSpan.FromMinutes(15).TotalSeconds >= stopWatch.Elapsed.TotalSeconds);
         }
 
+        // TODO: Un"skip" this test
         [Fact(Skip = ("Delete Skip when you want to pass the test"))]
         public void HighVolumeGetRewards()
         {

@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RewardCentral", "RewardCent
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TourGuideTest", "TourGuideTest\TourGuideTest.csproj", "{690EAAD6-5B9B-4052-8C67-8592AD1CE1AB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TourGuideBenchmark", "TourGuideBenchmark\TourGuideBenchmark.csproj", "{1772B123-9565-4E5E-B21D-05184CC86D31}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{690EAAD6-5B9B-4052-8C67-8592AD1CE1AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{690EAAD6-5B9B-4052-8C67-8592AD1CE1AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{690EAAD6-5B9B-4052-8C67-8592AD1CE1AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1772B123-9565-4E5E-B21D-05184CC86D31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1772B123-9565-4E5E-B21D-05184CC86D31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1772B123-9565-4E5E-B21D-05184CC86D31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1772B123-9565-4E5E-B21D-05184CC86D31}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

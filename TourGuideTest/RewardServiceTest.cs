@@ -38,6 +38,7 @@ public class RewardServiceTest : IClassFixture<DependencyFixture>
         Assert.True(_fixture.RewardsService.IsWithinAttractionProximity(attraction, attraction));
     }
 
+    // FIXME: Un"skip" this test - Needs fixed - can throw InvalidOperationException
     [Fact(Skip = ("Needs fixed - can throw InvalidOperationException"))]
     public void NearAllAttractions()
     {

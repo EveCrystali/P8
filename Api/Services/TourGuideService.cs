@@ -72,13 +72,24 @@ public class TourGuideService : ITourGuideService
         }
     }
 
+    /// <summary>
+    /// Retrieves trip deals for a user.
+    /// </summary>
+    /// <param name="user">The user for whom to retrieve trip deals.</param>
+    /// <returns>A list of providers for the trip deals.</returns>
     public List<Provider> GetTripDeals(User user)
     {
+        // Calculate the cumulative reward points of the user
         int cumulativeRewardPoints = user.UserRewards.Sum(i => i.RewardPoints);
+
+        // Retrieve the trip prices using the TripPricer API
         List<Provider> providers = _tripPricer.GetPrice(TripPricerApiKey, user.UserId,
             user.UserPreferences.NumberOfAdults, user.UserPreferences.NumberOfChildren,
             user.UserPreferences.TripDuration, cumulativeRewardPoints);
+
+        // Store the trip deals in the user object
         user.TripDeals = providers;
+
         return providers;
     }
 
