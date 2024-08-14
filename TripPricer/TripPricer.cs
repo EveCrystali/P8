@@ -29,8 +29,11 @@ public class TripPricer
         // Sleep to simulate some latency
         Thread.Sleep(ThreadLocalRandom.Current.Next(1, 50));
 
+
+        // NOTE: Upgrading i to 10 is the correct choice for making the unit test succeed but the test is taking too long to run -> need to optimize
+        // OPTIMIZE: i = 10
         // Calculate the price for each provider
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 10; i++)
         {
             // Generate a random multiple for the price calculation
             int multiple = ThreadLocalRandom.Current.Next(100, 700);
