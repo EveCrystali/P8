@@ -22,9 +22,10 @@ public class TripPricer
     public List<Provider> GetPrice(string apiKey, Guid attractionId, int adults, int children, int nightsStay, int rewardsPoints)
     {
         List<Provider> providers = [];
-        HashSet<string> providersUsed = new HashSet<string>();
+        HashSet<string> providersUsed = [];
 
         // HACK: certainly supposed to be optimized next to improve performance 
+        // NOTE: Need to monitor the performance of this function to understand why it is slow when the number of providers is high
         // Sleep to simulate some latency
         Thread.Sleep(ThreadLocalRandom.Current.Next(1, 50));
 
@@ -67,10 +68,18 @@ public class TripPricer
         return providers;
     }
 
+    /// <summary>
+    /// Gets a provider name based on the given API key and the number of adults.
+    /// </summary>
+    /// <param name="apiKey">The API key.</param>
+    /// <param name="adults">The number of adults.</param>
+    /// <returns>A provider name.</returns>
     public static string GetProviderName(string apiKey, int adults)
     {
+        // Generate a random multiple between 1 and 10 to select a provider name
         int multiple = ThreadLocalRandom.Current.Next(1, 10);
 
+        // Switch on the multiple to select the provider name
         return multiple switch
         {
             1 => "Holiday Travels",
@@ -82,6 +91,7 @@ public class TripPricer
             7 => "Live Free",
             8 => "Dancing Waves Cruselines and Partners",
             9 => "AdventureCo",
+            // Default to Cure-Your-Blues
             _ => "Cure-Your-Blues",
         };        
     }
