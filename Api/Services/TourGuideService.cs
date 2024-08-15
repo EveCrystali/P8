@@ -103,7 +103,7 @@ public class TourGuideService : ITourGuideService
 
     public List<Attraction> GetNearByAttractions(VisitedLocation visitedLocation)
     {
-        List<Attraction> nearbyAttractions = new ();
+        List<Attraction> nearbyAttractions = [];
         foreach (var attraction in _gpsUtil.GetAttractions())
         {
             if (_rewardsService.IsWithinAttractionProximity(attraction, visitedLocation.Location))

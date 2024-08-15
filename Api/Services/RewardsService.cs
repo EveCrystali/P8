@@ -7,10 +7,11 @@ namespace TourGuide.Services;
 
 public class RewardsService : IRewardsService
 {
-    private const double StatuteMilesPerNauticalMile = 1.15077945;
     private readonly int _defaultProximityBuffer = 10;
     private int _proximityBuffer;
-    private readonly int _attractionProximityRange = 200;
+
+    // NOTE : was previously 200 miles
+    private readonly double _attractionProximityRange = 321.87; 
     private readonly IGpsUtil _gpsUtil;
     private readonly IRewardCentral _rewardsCentral;
     private static int count = 0;
@@ -18,7 +19,7 @@ public class RewardsService : IRewardsService
     public RewardsService(IGpsUtil gpsUtil, IRewardCentral rewardCentral)
     {
         _gpsUtil = gpsUtil;
-        _rewardsCentral =rewardCentral;
+        _rewardsCentral = rewardCentral;
         _proximityBuffer = _defaultProximityBuffer;
     }
 
@@ -53,9 +54,17 @@ public class RewardsService : IRewardsService
         }
     }
 
+    /// <summary>
+    /// Checks if a given location is within the proximity of a given attraction.
+    /// </summary>
+    /// <param name="attraction">The attraction to check against.</param>
+    /// <param name="location">The location to check for proximity.</param>
+    /// <returns>True if the location is within the proximity of the attraction, otherwise false.</returns>
     public bool IsWithinAttractionProximity(Attraction attraction, Locations location)
     {
-        Console.WriteLine(GetDistance(attraction, location));
+        Console.WriteLine($"Distance from {location.Latitude} {location.Longitude} to {attraction.AttractionName}: {GetDistance(attraction, location)}");
+
+        // Return true if the distance is within the proximity range, otherwise false
         return GetDistance(attraction, location) <= _attractionProximityRange;
     }
 
@@ -69,17 +78,35 @@ public class RewardsService : IRewardsService
         return _rewardsCentral.GetAttractionRewardPoints(attraction.AttractionId, user.UserId);
     }
 
+    /// <summary>
+    /// Calculates the distance between two locations on the Earth's surface, in kilometers.
+    /// </summary>
+    /// <param name="loc1">The first location.</param>
+    /// <param name="loc2">The second location.</param>
+    /// <returns>The distance between the two locations, in kilometers.</returns>
     public double GetDistance(Locations loc1, Locations loc2)
     {
+        const double EarthRadiusKm = 6371.0;
+
+        // Convert the latitude and longitude from degrees to radians
         double lat1 = Math.PI * loc1.Latitude / 180.0;
         double lon1 = Math.PI * loc1.Longitude / 180.0;
         double lat2 = Math.PI * loc2.Latitude / 180.0;
         double lon2 = Math.PI * loc2.Longitude / 180.0;
 
-        double angle = Math.Acos(Math.Sin(lat1) * Math.Sin(lat2)
-                                + Math.Cos(lat1) * Math.Cos(lat2) * Math.Cos(lon1 - lon2));
+        // Calculate the differences in latitude and longitude
+        double dlat = lat2 - lat1;
+        double dlon = lon2 - lon1;
 
-        double nauticalMiles = 60.0 * angle * 180.0 / Math.PI;
-        return StatuteMilesPerNauticalMile * nauticalMiles;
+        // Calculate the Haversine distance formula
+        double a = Math.Sin(dlat / 2) * Math.Sin(dlat / 2) +
+                   Math.Cos(lat1) * Math.Cos(lat2) *
+                   Math.Sin(dlon / 2) * Math.Sin(dlon / 2);
+
+        double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+
+        // Return the distance in kilometers
+        return EarthRadiusKm * c;
     }
+
 }

@@ -86,19 +86,22 @@ namespace TourGuideTest
             Assert.Equal(user.UserId, visitedLocation.UserId);
         }
 
-        // TODO: Un"skip" this test
-        [Fact(Skip = "Not yet implemented")]
+        [Fact]
         public void GetNearbyAttractions()
         {
+            // Arrange
             _fixture.Initialize(0);
             var user = new User(Guid.NewGuid(), "jon", "000", "jon@tourGuide.com");
-            var visitedLocation = _fixture.TourGuideService.TrackUserLocation(user);
+            // Add a test visited location to the user nearby 4 attractions
+            var visitedLocation = new VisitedLocation(user.UserId, new Locations(34.5, -116.5), DateTime.UtcNow);
+            user.AddToVisitedLocations(visitedLocation);
 
+            // Act
             List<Attraction> attractions = _fixture.TourGuideService.GetNearByAttractions(visitedLocation);
-
             _fixture.TourGuideService.Tracker.StopTracking();
 
-            Assert.Equal(5, attractions.Count);
+            // Assert
+            Assert.Equal(4, attractions.Count);
         }
 
         /// <summary>
