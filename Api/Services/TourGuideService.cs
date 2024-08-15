@@ -101,11 +101,20 @@ public class TourGuideService : ITourGuideService
         return visitedLocation;
     }
 
+    // TODO: Change this method to no longer return a List of Attractions. Its purpose is to make sure that the GetNearByAttractions method returns the 5 nearby attractions.
+    // Instead: Get the closest five tourist attractions to the user - no matter how far away they are.
+    // Return a new JSON object that contains:
+    // Name of Tourist attraction, 
+    // Tourist attractions lat/long, 
+    // The user's location lat/long, 
+    // The distance in miles between the user's location and each of the attractions.
+    // The reward points for visiting each Attraction.
     public List<Attraction> GetNearByAttractions(VisitedLocation visitedLocation)
     {
         List<Attraction> nearbyAttractions = [];
         foreach (var attraction in _gpsUtil.GetAttractions())
         {
+            // TODO: Create a new method returning a list of the 5 nearby attractions and then operate the following code on that list
             if (_rewardsService.IsWithinAttractionProximity(attraction, visitedLocation.Location))
             {
                 nearbyAttractions.Add(attraction);

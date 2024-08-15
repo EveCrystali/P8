@@ -86,6 +86,7 @@ namespace TourGuideTest
             Assert.Equal(user.UserId, visitedLocation.UserId);
         }
 
+        // TODO: Modify this test. Its purpose is to make sure that the GetNearByAttractions method returns the 5 nearby attractions
         [Fact]
         public void GetNearbyAttractions()
         {
