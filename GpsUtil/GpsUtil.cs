@@ -13,25 +13,38 @@ public class GpsUtil
     // NOTE: This line of code creates a `SemaphoreSlim` object named `rateLimiter` that limits the number of concurrent accesses to a resource to prevent overloading and excessive usage. 
     private static readonly SemaphoreSlim rateLimiter = new(1000, 1000);
 
+    /// <summary>
+    /// Gets the user location.
+    /// </summary>
+    /// <param name="userId">The user id.</param>
+    /// <returns>The user location.</returns>
     public VisitedLocation GetUserLocation(Guid userId)
     {
+        // Limit the number of concurrent requests to prevent overloading and excessive usage
         rateLimiter.Wait();
         try
         {
+            // OPTIMIZE: This line of code is a temporary fix and should be removed in the future
+            // Sleep for a short period of time to simulate the time it takes to get the user location
             Sleep();
 
+            // Generate a random longitude between -180 and 180
             double longitude = ThreadLocalRandom.NextDouble(-180.0, 180.0);
             longitude = Math.Round(longitude, 6);
 
+            // Generate a random latitude between -90 and 90
             double latitude = ThreadLocalRandom.NextDouble(-90, 90);
             latitude = Math.Round(latitude, 6);
 
+            // Create a new VisitedLocation object with the user id, location, and current time
             VisitedLocation visitedLocation = new(userId, new Locations(latitude, longitude), DateTime.UtcNow);
 
+            // Return the visited location
             return visitedLocation;
         }
         finally
         {
+            // Release the semaphore to allow other requests to access the resource
             rateLimiter.Release();
         }
     }
@@ -83,13 +96,13 @@ public class GpsUtil
         }
     }
 
-    private void Sleep()
+    private static void Sleep()
     {
         int delay = ThreadLocalRandom.Current.Next(30, 100);
         Thread.Sleep(delay);
     }
 
-    private void SleepLighter()
+    private static void SleepLighter()
     {
         Thread.Sleep(10);
     }
