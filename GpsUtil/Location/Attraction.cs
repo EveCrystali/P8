@@ -6,18 +6,10 @@ using System.Threading.Tasks;
 
 namespace GpsUtil.Location;
 
-public class Attraction : Locations
+public class Attraction(string attractionName, string city, string state, double latitude, double longitude) : Locations(latitude, longitude)
 {
-    public string AttractionName { get; }
-    public string City { get; }
-    public string State { get; }
-    public Guid AttractionId { get; }
-
-    public Attraction(string attractionName, string city, string state, double latitude, double longitude) : base(latitude, longitude)
-    {
-        AttractionName = attractionName;
-        City = city;
-        State = state;
-        AttractionId = Guid.NewGuid();
-    }
+    public string AttractionName { get; } = attractionName;
+    public string City { get; } = city;
+    public string State { get; } = state;
+    public Guid AttractionId { get; } = Guid.NewGuid();
 }

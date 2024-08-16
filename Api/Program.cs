@@ -33,3 +33,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+// NOTE: if testmode is enabled then it will create 100 internal users for testing. 
+// Note:userName = $"internalUser{i}"  
+// Note: user = new User(Guid.NewGuid(), userName, "000", $"{userName}@tourGuide.com"); */

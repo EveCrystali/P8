@@ -101,21 +101,37 @@ public class TourGuideService : ITourGuideService
         return visitedLocation;
     }
 
-    public List<Attraction> GetNearByAttractions(VisitedLocation visitedLocation)
+    /// <summary>
+    /// Retrieves an sorted array of 5 maximum nearby attractions for a given visited location.
+    /// </summary>
+    /// <param name="visitedLocation">The location to retrieve nearby attractions for.</param>
+    /// <returns>An array of nearby attractions.</returns>
+    public Attraction[] GetNearbyAttractions(VisitedLocation visitedLocation)
     {
+        // Get all attractions from the GpsUtil
         List<Attraction> nearbyAttractions = _gpsUtil.GetAttractions()
             .Where(attraction => _rewardsService.IsWithinAttractionProximity(attraction, visitedLocation.Location))
             .ToList();
 
-        List<Attraction> sortedNearbyAttractions = [.. nearbyAttractions.OrderBy(a =>
-            _rewardsService.GetDistance(a, visitedLocation.Location))];
+        // Sort the nearby attractions by their distance from the visited location
+        nearbyAttractions.Sort((Attraction a, Attraction b) =>
+            _rewardsService.GetDistance(a, visitedLocation.Location).CompareTo(
+            _rewardsService.GetDistance(b, visitedLocation.Location))
+        );
 
-        if (sortedNearbyAttractions.Count > 5)
+        // Determine the count of nearby attractions to return
+        int count = Math.Min(5, nearbyAttractions.Count);
+
+        // Create an array to store the sorted nearby attractions
+        Attraction[] arrayOfSortedNearbyAttractions = new Attraction[count];
+
+        // Populate the array with the nearest nearby attractions
+        for (int i = 0; i < count; i++)
         {
-            return sortedNearbyAttractions.GetRange(0, 5);
+            arrayOfSortedNearbyAttractions[i] = nearbyAttractions[i];
         }
 
-        return sortedNearbyAttractions;
+        return arrayOfSortedNearbyAttractions;
     }
 
     private void AddShutDownHook()
