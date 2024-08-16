@@ -1,4 +1,6 @@
-﻿using GpsUtil.Location;
+﻿using System.Collections;
+using System.Linq;
+using GpsUtil.Location;
 using TourGuide.LibrairiesWrappers.Interfaces;
 using TourGuide.Services.Interfaces;
 using TourGuide.Users;
@@ -11,7 +13,7 @@ public class RewardsService : IRewardsService
     private int _proximityBuffer;
 
     // NOTE : was previously 200 miles, is now the circumference of the earth
-    private readonly double _attractionProximityRange = 40075; 
+    private readonly double _attractionProximityRange = 40075;
     private readonly IGpsUtil _gpsUtil;
     private readonly IRewardCentral _rewardsCentral;
     private static int count = 0;
@@ -33,25 +35,58 @@ public class RewardsService : IRewardsService
         _proximityBuffer = _defaultProximityBuffer;
     }
 
+    /*
+    * This method was not thread safe because using count++ operator whereas count is declared as static.
+    * The issue is that the count variable is declared as static, which means it belongs to the class itself, 
+    * not to any instance of the class. However, it is being updated from an instance method CalculateRewards.
+    * In C#, when a static field is updated from an instance method, it can lead to unexpected behavior, 
+    * especially in multi-threaded environments. This is because static fields are shared across all instances of the class, 
+    * and updating it from an instance method can cause conflicts between different instances. */
+    // TODO: Refactor this method
+    // OPTIMIZE: Maybe this could be optimize but not sure (test NearAllAttractions test is 14.0sec)
     public void CalculateRewards(User user)
     {
-        count++;
-        List<VisitedLocation> userLocations = user.VisitedLocations;
-        List<Attraction> attractions = _gpsUtil.GetAttractions();
+        Interlocked.Increment(ref count);
+        List<UserReward> rewardsTemp = new List<UserReward>();
 
-        foreach (var visitedLocation in userLocations)
+        // Improve efficiency by using a `HashSet` to track existing rewards, preventing duplicate entries
+        HashSet<string> existingRewards = new HashSet<string>(user.UserRewards.Select(r => r.Attraction.AttractionName));
+
+        foreach (Attraction attraction in _gpsUtil.GetAttractions())
         {
-            foreach (var attraction in attractions)
+            // If the attraction is already rewarded, skip it
+            if (existingRewards.Contains(attraction.AttractionName))
             {
-                if (!user.UserRewards.Any(r => r.Attraction.AttractionName == attraction.AttractionName))
-                {
-                    if (NearAttraction(visitedLocation, attraction))
-                    {
-                        user.AddUserReward(new UserReward(visitedLocation, attraction, GetRewardPoints(attraction, user)));
-                    }
-                }
+                continue;
+            }
+
+            bool rewardGiven = false;
+
+            List<VisitedLocation> nearVisitedLocation = user.VisitedLocations.Where(v => NearAttraction(v, attraction)).ToList();
+
+            foreach (VisitedLocation visitedLocation in nearVisitedLocation)
+            {
+                rewardsTemp.Add(new UserReward(visitedLocation, attraction, GetRewardPoints(attraction, user)));
+                rewardGiven = true;
+                // Only give one reward per attraction 
+                break;
+            }
+
+            if (rewardGiven)
+            {
+                existingRewards.Add(attraction.AttractionName);
             }
         }
+
+        user.UserRewards.AddRange(rewardsTemp);
+    }
+
+
+
+    public bool UserRewardsExist(string userRewardAttractionName, string attractionName)
+    {
+        List<Attraction> attractionList = _gpsUtil.GetAttractions();
+        return attractionList.Exists(a => a.AttractionName == attractionName);
     }
 
     /// <summary>
