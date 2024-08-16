@@ -1,14 +1,6 @@
 ﻿using GpsUtil.Location;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TourGuide.Services;
 using TourGuide.Users;
-using TourGuide.Utilities;
 using TripPricer;
 
 namespace TourGuideTest
@@ -92,8 +84,7 @@ namespace TourGuideTest
             // Arrange
             _fixture.Initialize(0);
             var user = new User(Guid.NewGuid(), "jon", "000", "jon@tourGuide.com");
-            // Add a test visited location to the user nearby 4 attractions
-            var visitedLocation = new VisitedLocation(user.UserId, new Locations(34.5, -116.5), DateTime.UtcNow);
+            var visitedLocation = _fixture.TourGuideService.TrackUserLocation(user);
             user.AddToVisitedLocations(visitedLocation);
 
             // Act
@@ -101,7 +92,7 @@ namespace TourGuideTest
             _fixture.TourGuideService.Tracker.StopTracking();
 
             // Assert
-            Assert.Equal(4, attractions.Count);
+            Assert.Equal(5, attractions.Count);
         }
 
         /// <summary>

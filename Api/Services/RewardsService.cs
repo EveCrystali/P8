@@ -10,8 +10,8 @@ public class RewardsService : IRewardsService
     private readonly int _defaultProximityBuffer = 10;
     private int _proximityBuffer;
 
-    // NOTE : was previously 200 miles
-    private readonly double _attractionProximityRange = 321.87; 
+    // NOTE : was previously 200 miles, is now the circumference of the earth
+    private readonly double _attractionProximityRange = 40075; 
     private readonly IGpsUtil _gpsUtil;
     private readonly IRewardCentral _rewardsCentral;
     private static int count = 0;
@@ -55,7 +55,7 @@ public class RewardsService : IRewardsService
     }
 
     /// <summary>
-    /// Checks if a given location is within the proximity of a given attraction.
+    /// Checks if a given location is within the proximity of a given attraction (= earth circumference). It enables to check that GetDistance returns a reasonable value.
     /// </summary>
     /// <param name="attraction">The attraction to check against.</param>
     /// <param name="location">The location to check for proximity.</param>
@@ -65,6 +65,7 @@ public class RewardsService : IRewardsService
         Console.WriteLine($"Distance from {location.Latitude} {location.Longitude} to {attraction.AttractionName}: {GetDistance(attraction, location)}");
 
         // Return true if the distance is within the proximity range, otherwise false
+        // NOTE: _attractionProximityRange was previously 200 miles, is now implemented to check if it is less than a lap of the earth.
         return GetDistance(attraction, location) <= _attractionProximityRange;
     }
 
