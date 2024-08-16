@@ -55,7 +55,7 @@ public class RewardsService : IRewardsService
     }
 
     /// <summary>
-    /// Checks if a given location is within the proximity of a given attraction.
+    /// Checks if a given location is within the proximity of a given attraction (= earth circumference). It enables to check that GetDistance returns a reasonable value.
     /// </summary>
     /// <param name="attraction">The attraction to check against.</param>
     /// <param name="location">The location to check for proximity.</param>
