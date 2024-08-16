@@ -22,13 +22,14 @@ public class RewardServiceTest : IClassFixture<DependencyFixture>
     public void UserGetRewards()
     {
         _fixture.Initialize(0);
-        var user = new User(Guid.NewGuid(), "jon", "000", "jon@tourGuide.com");
-        var attraction = _fixture.GpsUtil.GetAttractions().First();
+        User user = new User(Guid.NewGuid(), "jon", "000", "jon@tourGuide.com");
+        Attraction? attraction = _fixture.GpsUtil.GetAttractions()[0];
+        if (attraction == null) { Assert.Fail(); }
         user.AddToVisitedLocations(new VisitedLocation(user.UserId, attraction, DateTime.Now));
         _fixture.TourGuideService.TrackUserLocation(user);
         var userRewards = user.UserRewards;
         _fixture.TourGuideService.Tracker.StopTracking();
-        Assert.True(userRewards.Count == 1);
+        Assert.Single(userRewards);
     }
 
     [Fact]
@@ -39,7 +40,7 @@ public class RewardServiceTest : IClassFixture<DependencyFixture>
     }
 
     // FIXME: Un"skip" this test - Needs fixed - can throw InvalidOperationException
-    [Fact(Skip = ("Needs fixed - can throw InvalidOperationException"))]
+    [Fact]
     public void NearAllAttractions()
     {
         _fixture.Initialize(1);
