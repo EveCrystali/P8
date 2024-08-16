@@ -88,11 +88,11 @@ namespace TourGuideTest
             user.AddToVisitedLocations(visitedLocation);
 
             // Act
-            List<Attraction> attractions = _fixture.TourGuideService.GetNearByAttractions(visitedLocation);
+            Attraction[] attractions = _fixture.TourGuideService.GetNearbyAttractions(visitedLocation);
             _fixture.TourGuideService.Tracker.StopTracking();
 
             // Assert
-            Assert.Equal(5, attractions.Count);
+            Assert.Equal(5, attractions.Length);
         }
 
         /// <summary>

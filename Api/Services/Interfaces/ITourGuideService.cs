@@ -11,7 +11,7 @@ namespace TourGuide.Services.Interfaces
 
         void AddUser(User user);
         List<User> GetAllUsers();
-        List<Attraction> GetNearByAttractions(VisitedLocation visitedLocation);
+        Attraction[] GetNearbyAttractions(VisitedLocation visitedLocation);
         List<Provider> GetTripDeals(User user);
         User GetUser(string userName);
         VisitedLocation GetUserLocation(User user);
