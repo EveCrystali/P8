@@ -36,8 +36,8 @@ namespace TourGuideTest
             _output = output;
         }
 
-        // TODO: Un"skip" this test
-        [Fact(Skip = "Delete Skip when you want to pass the test")]
+        // FIXME: Need optimization here - Must be able to handle 100 000 UserLocations in less than 15 minutes. 
+        [Fact]
         public void HighVolumeTrackLocation()
         {
             //On peut ici augmenter le nombre d'utilisateurs pour tester les performances
@@ -55,7 +55,7 @@ namespace TourGuideTest
             stopWatch.Stop();
             _fixture.TourGuideService.Tracker.StopTracking();
 
-            _output.WriteLine($"highVolumeTrackLocation: Time Elapsed: {stopWatch.Elapsed.TotalSeconds} seconds.");
+            _output.WriteLine($"highVolumeTrackLocation(Number of users: {allUsers.Count}): Time Elapsed: {stopWatch.Elapsed.TotalSeconds} seconds.");
 
             Assert.True(TimeSpan.FromMinutes(15).TotalSeconds >= stopWatch.Elapsed.TotalSeconds);
         }

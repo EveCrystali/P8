@@ -42,7 +42,7 @@ public class RewardsService : IRewardsService
     * especially in multi-threaded environments. This is because static fields are shared across all instances of the class,
     * and updating it from an instance method can cause conflicts between different instances. */
 
-    // OPTIMIZE: Maybe this could be optimize but not sure (test NearAllAttractions test is 14.0sec)
+    // OPTIMIZE: HighVolumeTrackLocation
     /// <summary>
     /// Calculates the rewards for a given user.
     /// </summary>
@@ -82,13 +82,7 @@ public class RewardsService : IRewardsService
         // Add the new rewards to the user's rewards
         user.UserRewards.AddRange(rewardsToAdd);
     }
-
-    public bool UserRewardsExist(string userRewardAttractionName, string attractionName)
-    {
-        List<Attraction> attractionList = _gpsUtil.GetAttractions();
-        return attractionList.Exists(a => a.AttractionName == attractionName);
-    }
-
+    
     /// <summary>
     /// Checks if a given location is within the proximity of a given attraction (= earth circumference). It enables to check that GetDistance returns a reasonable value.
     /// </summary>

@@ -18,11 +18,11 @@ namespace TourGuideTest
         }
 
         [Fact]
-        public void GetUserLocation()
+        public async Task GetUserLocation()
         {
             _fixture.Initialize(0);
             User user = new(Guid.NewGuid(), "jon", "000", "jon@tourGuide.com");
-            VisitedLocation visitedLocation = _fixture.TourGuideService.TrackUserLocation(user);
+            VisitedLocation visitedLocation = await _fixture.TourGuideService.TrackUserLocation(user);
             _fixture.TourGuideService.Tracker.StopTracking();
 
             Assert.Equal(user.UserId, visitedLocation.UserId);
@@ -66,11 +66,11 @@ namespace TourGuideTest
         }
 
         [Fact]
-        public void TrackUser()
+        public async Task TrackUser()
         {
             _fixture.Initialize();
             User user = new(Guid.NewGuid(), "jon", "000", "jon@tourGuide.com");
-            VisitedLocation visitedLocation = _fixture.TourGuideService.TrackUserLocation(user);
+            VisitedLocation visitedLocation = await _fixture.TourGuideService.TrackUserLocation(user);
 
             _fixture.TourGuideService.Tracker.StopTracking();
 
@@ -78,12 +78,12 @@ namespace TourGuideTest
         }
 
         [Fact]
-        public void GetNearbyAttractions()
+        public async Task GetNearbyAttractions()
         {
             // Arrange
             _fixture.Initialize(0);
             User user = new(Guid.NewGuid(), "jon", "000", "jon@tourGuide.com");
-            VisitedLocation visitedLocation = _fixture.TourGuideService.TrackUserLocation(user);
+            VisitedLocation visitedLocation = await _fixture.TourGuideService.TrackUserLocation(user);
             user.AddToVisitedLocations(visitedLocation);
 
             // Act

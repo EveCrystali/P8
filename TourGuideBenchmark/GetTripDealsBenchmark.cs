@@ -1,39 +1,15 @@
 using BenchmarkDotNet.Attributes;
-using Microsoft.Extensions.Logging;
-using TourGuide.Services;
-using TourGuide.Users;
-using TourGuideTest;
+using TourGuideBenchmark.Helpers;
+
 
 namespace TourGuideBenchmark
 {
-    public class GetTripDealsBenchmark
+    public class GetTripDealsBenchmark : BenchmarkHelper
     {
-        private TourGuideService _tourGuideService;
-        private DependencyFixture _fixture;
-        private User _user;
-
-        [GlobalSetup]
-        public void Setup()
-        {
-            _fixture = new DependencyFixture();
-            _fixture.Initialize(0); // Initialiser la fixture
-
-            ILoggerFactory loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
-            ILogger<TourGuideService> logger = loggerFactory.CreateLogger<TourGuideService>();
-
-            _tourGuideService = new TourGuideService(
-                logger,
-                _fixture.GpsUtil,
-                _fixture.RewardsService,
-                loggerFactory);
-
-            _user = new User(Guid.NewGuid(), "jon", "000", "jon@tourGuide.com");
-        }
 
         [Benchmark]
         public void BenchmarkGetTripDeals()
         {
-            // Act
             _tourGuideService.GetTripDeals(_user);
         }
     }

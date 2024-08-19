@@ -47,9 +47,9 @@ public class TourGuideService : ITourGuideService
         return user.UserRewards;
     }
 
-    public VisitedLocation GetUserLocation(User user)
+    public async Task<VisitedLocation> GetUserLocation(User user)
     {
-        return user.VisitedLocations.Any() ? user.GetLastVisitedLocation() : TrackUserLocation(user);
+        return user.VisitedLocations.Count != 0 ? user.GetLastVisitedLocation() : await TrackUserLocation(user);
     }
 
     public User GetUser(string userName)
@@ -91,9 +91,11 @@ public class TourGuideService : ITourGuideService
         return providers;
     }
 
-    public VisitedLocation TrackUserLocation(User user)
+    // OPTIMIZE: HighVolumeTrackLocation
+    // FIXME: Need optimization here - Must be able to handle 100 000 UserLocations in less than 15 minutes.
+    public async Task<VisitedLocation> TrackUserLocation(User user)
     {
-        VisitedLocation visitedLocation = _gpsUtil.GetUserLocation(user.UserId);
+        VisitedLocation visitedLocation = await _gpsUtil.GetUserLocation(user.UserId);
         user.AddToVisitedLocations(visitedLocation);
         _rewardsService.CalculateRewards(user);
         return visitedLocation;

@@ -8,21 +8,20 @@ public class GpsUtil
     // NOTE: This line of code creates a `SemaphoreSlim` object named `rateLimiter` that limits the number of concurrent accesses to a resource to prevent overloading and excessive usage.
     private static readonly SemaphoreSlim rateLimiter = new(1000, 1000);
 
+    // OPTIMIZE: HighVolumeTrackLocation
+    // FIXME: Need optimization here - Must be able to handle 100 000 UserLocations in less than 15 minutes.
+    // TODO: GOOD FIRST ISSUE
     /// <summary>
     /// Gets the user location.
     /// </summary>
     /// <param name="userId">The user id.</param>
     /// <returns>The user location.</returns>
-    public VisitedLocation GetUserLocation(Guid userId)
+    public static async Task<VisitedLocation> GetUserLocation(Guid userId)
     {
         // Limit the number of concurrent requests to prevent overloading and excessive usage
         rateLimiter.Wait();
         try
         {
-            // OPTIMIZE: This line of code is a temporary fix and should be removed in the future
-            // Sleep for a short period of time to simulate the time it takes to get the user location
-            Sleep();
-
             // Generate a random longitude between -180 and 180
             double longitude = ThreadLocalRandom.NextDouble(-180.0, 180.0);
             longitude = Math.Round(longitude, 6);
@@ -35,7 +34,7 @@ public class GpsUtil
             VisitedLocation visitedLocation = new(userId, new Locations(latitude, longitude), DateTime.UtcNow);
 
             // Return the visited location
-            return visitedLocation;
+            return await Task.FromResult(visitedLocation);
         }
         finally
         {
@@ -50,7 +49,7 @@ public class GpsUtil
 
         try
         {
-            // OPTIMIZE: line below "Sleep" must be removed to make it faster
+            // HACK: line below "Sleep" must be removed to make it faster
             SleepLighter();
 
             List<Attraction> attractions =
@@ -89,12 +88,6 @@ public class GpsUtil
         {
             rateLimiter.Release();
         }
-    }
-
-    private static void Sleep()
-    {
-        int delay = ThreadLocalRandom.Current.Next(30, 100);
-        Thread.Sleep(delay);
     }
 
     private static void SleepLighter()
