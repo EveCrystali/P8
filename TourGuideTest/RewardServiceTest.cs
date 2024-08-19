@@ -35,18 +35,17 @@ public class RewardServiceTest : IClassFixture<DependencyFixture>
     [Fact]
     public void IsWithinAttractionProximity()
     {
-        var attraction = _fixture.GpsUtil.GetAttractions().First();
+        var attraction = _fixture.GpsUtil.GetAttractions()[0];
         Assert.True(_fixture.RewardsService.IsWithinAttractionProximity(attraction, attraction));
     }
 
-    // FIXME: Un"skip" this test - Needs fixed - can throw InvalidOperationException
     [Fact]
     public void NearAllAttractions()
     {
         _fixture.Initialize(1);
         _fixture.RewardsService.SetProximityBuffer(int.MaxValue);
 
-        var user = _fixture.TourGuideService.GetAllUsers().First();
+        var user = _fixture.TourGuideService.GetAllUsers()[0];
         _fixture.RewardsService.CalculateRewards(user);
         var userRewards = _fixture.TourGuideService.GetUserRewards(user);
         _fixture.TourGuideService.Tracker.StopTracking();

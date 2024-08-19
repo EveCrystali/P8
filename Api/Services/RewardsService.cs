@@ -42,46 +42,50 @@ public class RewardsService : IRewardsService
     * In C#, when a static field is updated from an instance method, it can lead to unexpected behavior, 
     * especially in multi-threaded environments. This is because static fields are shared across all instances of the class, 
     * and updating it from an instance method can cause conflicts between different instances. */
-    // TODO: Refactor this method
     // OPTIMIZE: Maybe this could be optimize but not sure (test NearAllAttractions test is 14.0sec)
+    /// <summary>
+    /// Calculates the rewards for a given user.
+    /// </summary>
+    /// <param name="user">The user.</param>
     public void CalculateRewards(User user)
     {
+        // Increment the count of rewards calculations
         Interlocked.Increment(ref count);
-        List<UserReward> rewardsTemp = new List<UserReward>();
 
-        // Improve efficiency by using a `HashSet` to track existing rewards, preventing duplicate entries
-        HashSet<string> existingRewards = new HashSet<string>(user.UserRewards.Select(r => r.Attraction.AttractionName));
+        // Set var copy to avoid System.InvalidOperationException : Collection was modified; enumeration operation may not execute.
 
-        foreach (Attraction attraction in _gpsUtil.GetAttractions())
+        List<VisitedLocation> userVisitedLocations = new(user.VisitedLocations);
+        List<Attraction> getAllAttractions = _gpsUtil.GetAttractions();
+
+        // Create a hash set of existing reward attraction names to avoid duplicates
+        HashSet<string> existingRewardAttractions = new(user.UserRewards.Select(r => r.Attraction.AttractionName));
+
+        // Create a list to store the new rewards to add to the user at the end
+        List<UserReward> rewardsToAdd = [];
+
+        foreach (VisitedLocation visitedLocation in userVisitedLocations)
         {
-            // If the attraction is already rewarded, skip it
-            if (existingRewards.Contains(attraction.AttractionName))
+            foreach (Attraction attraction in getAllAttractions)
             {
-                continue;
-            }
+                // Check if the attraction is not already a reward and if the user is near the attraction
+                if (!existingRewardAttractions.Contains(attraction.AttractionName) && NearAttraction(visitedLocation, attraction))
+                {
+                    // Create a new UserReward
+                    UserReward newReward = new(visitedLocation, attraction, GetRewardPoints(attraction, user));
 
-            bool rewardGiven = false;
+                    // Add the reward to the list of rewards to add
+                    rewardsToAdd.Add(newReward);
 
-            List<VisitedLocation> nearVisitedLocation = user.VisitedLocations.Where(v => NearAttraction(v, attraction)).ToList();
-
-            foreach (VisitedLocation visitedLocation in nearVisitedLocation)
-            {
-                rewardsTemp.Add(new UserReward(visitedLocation, attraction, GetRewardPoints(attraction, user)));
-                rewardGiven = true;
-                // Only give one reward per attraction 
-                break;
-            }
-
-            if (rewardGiven)
-            {
-                existingRewards.Add(attraction.AttractionName);
+                    // Add the attraction to the list of existing rewards to avoid duplicates
+                    existingRewardAttractions.Add(attraction.AttractionName);
+                }
             }
         }
 
-        user.UserRewards.AddRange(rewardsTemp);
+        // Add the new rewards to the user's rewards
+
+        user.UserRewards.AddRange(rewardsToAdd);
     }
-
-
 
     public bool UserRewardsExist(string userRewardAttractionName, string attractionName)
     {
