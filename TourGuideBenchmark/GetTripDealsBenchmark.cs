@@ -1,5 +1,4 @@
 using BenchmarkDotNet.Attributes;
-using BenchmarkDotNet.Running;
 using Microsoft.Extensions.Logging;
 using TourGuide.Services;
 using TourGuide.Users;
@@ -23,9 +22,9 @@ namespace TourGuideBenchmark
             var logger = loggerFactory.CreateLogger<TourGuideService>();
 
             _tourGuideService = new TourGuideService(
-                logger, 
-                _fixture.GpsUtil, 
-                _fixture.RewardsService, 
+                logger,
+                _fixture.GpsUtil,
+                _fixture.RewardsService,
                 loggerFactory);
 
             _user = new User(Guid.NewGuid(), "jon", "000", "jon@tourGuide.com");

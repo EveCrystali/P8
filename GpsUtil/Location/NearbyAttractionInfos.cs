@@ -1,9 +1,7 @@
-using System;
-
 namespace GpsUtil.Location;
 
-public class NearbyAttractionInfos(string attractionName, 
-    double attractionLatitude, double attractionLongitude, 
+public class NearbyAttractionInfos(string attractionName,
+    double attractionLatitude, double attractionLongitude,
     double userLatitude, double userLongitude,
     double distanceInMiles, int rewardPoints)
 {

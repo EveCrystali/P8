@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TripPricer.Helpers;
+﻿using TripPricer.Helpers;
 
 namespace TripPricer;
 
@@ -26,7 +21,7 @@ public class TripPricer
 
         // HACK: certainly supposed to be optimized next to improve performance 
         // NOTE: Need to monitor the performance of this function to understand why it is slow when the number of providers is high
-        
+
         // Sleep to simulate some latency
         Thread.Sleep(ThreadLocalRandom.Current.Next(1, 50));
 
