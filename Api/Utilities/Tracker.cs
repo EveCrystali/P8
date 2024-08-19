@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using TourGuide.Services;
 using TourGuide.Services.Interfaces;
 using TourGuide.Users;
 
@@ -9,7 +8,7 @@ public class Tracker
 {
     private readonly ILogger<Tracker> _logger;
     private static readonly TimeSpan TrackingPollingInterval = TimeSpan.FromMinutes(5);
-    private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+    private readonly CancellationTokenSource _cancellationTokenSource = new();
     private readonly ITourGuideService _tourGuideService;
 
     public Tracker(ITourGuideService tourGuideService, ILogger<Tracker> logger)
@@ -27,7 +26,7 @@ public class Tracker
 
     public async Task Run()
     {
-        var stopwatch = new Stopwatch();
+        Stopwatch stopwatch = new();
 
         while (!_cancellationTokenSource.Token.IsCancellationRequested)
         {

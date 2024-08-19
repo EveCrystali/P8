@@ -10,10 +10,10 @@ public class User
     public string PhoneNumber { get; set; }
     public string EmailAddress { get; set; }
     public DateTime LatestLocationTimestamp { get; set; }
-    public List<VisitedLocation> VisitedLocations { get; } = new List<VisitedLocation>();
-    public List<UserReward> UserRewards { get; } = new List<UserReward>();
+    public List<VisitedLocation> VisitedLocations { get; } = [];
+    public List<UserReward> UserRewards { get; } = [];
     public UserPreferences UserPreferences { get; set; } = new UserPreferences();
-    public List<Provider> TripDeals { get; set; } = new List<Provider>();
+    public List<Provider> TripDeals { get; set; } = [];
 
     public User(Guid userId, string userName, string phoneNumber, string emailAddress)
     {

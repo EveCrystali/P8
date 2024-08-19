@@ -8,12 +8,12 @@ namespace TourGuide.LibrairiesWrappers
 
         public RewardCentralWrapper()
         {
-            _rewardCentral = new ();
+            _rewardCentral = new();
         }
 
         public int GetAttractionRewardPoints(Guid attractionId, Guid userId)
         {
-            return _rewardCentral.GetAttractionRewardPoints(attractionId, userId);
+            return RewardCentral.RewardCentral.GetAttractionRewardPoints(attractionId, userId);
         }
     }
 }

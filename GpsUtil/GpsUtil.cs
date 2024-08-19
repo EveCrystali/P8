@@ -1,16 +1,11 @@
 ﻿using GpsUtil.Helpers;
 using GpsUtil.Location;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GpsUtil;
 
 public class GpsUtil
 {
-    // NOTE: This line of code creates a `SemaphoreSlim` object named `rateLimiter` that limits the number of concurrent accesses to a resource to prevent overloading and excessive usage. 
+    // NOTE: This line of code creates a `SemaphoreSlim` object named `rateLimiter` that limits the number of concurrent accesses to a resource to prevent overloading and excessive usage.
     private static readonly SemaphoreSlim rateLimiter = new(1000, 1000);
 
     /// <summary>
@@ -49,7 +44,7 @@ public class GpsUtil
         }
     }
 
-    public List<Attraction> GetAttractions()
+    public static List<Attraction> GetAttractions()
     {
         rateLimiter.Wait();
 
@@ -58,8 +53,8 @@ public class GpsUtil
             // OPTIMIZE: line below "Sleep" must be removed to make it faster
             SleepLighter();
 
-            List<Attraction> attractions = new()
-            {
+            List<Attraction> attractions =
+            [
                 new Attraction("Disneyland", "Anaheim", "CA", 33.817595, -117.922008),
                 new Attraction("Jackson Hole", "Jackson Hole", "WY", 43.582767, -110.821999),
                 new Attraction("Mojave National Preserve", "Kelso", "CA", 35.141689, -115.510399),
@@ -86,7 +81,7 @@ public class GpsUtil
                 new Attraction("Kansas City Zoo", "Kansas City", "MO", 39.007504, -94.529625),
                 new Attraction("Bronx Zoo", "Bronx", "NY", 40.852905, -73.872971),
                 new Attraction("Cinderella Castle", "Orlando", "FL", 28.419411, -81.5812)
-            };
+            ];
 
             return attractions;
         }

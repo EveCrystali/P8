@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TripPricer.Helpers;
+﻿using TripPricer.Helpers;
 
 namespace TripPricer;
 
@@ -24,9 +19,9 @@ public class TripPricer
         List<Provider> providers = [];
         HashSet<string> providersUsed = [];
 
-        // HACK: certainly supposed to be optimized next to improve performance 
+        // HACK: certainly supposed to be optimized next to improve performance
         // NOTE: Need to monitor the performance of this function to understand why it is slow when the number of providers is high
-        
+
         // Sleep to simulate some latency
         Thread.Sleep(ThreadLocalRandom.Current.Next(1, 50));
 
@@ -42,10 +37,10 @@ public class TripPricer
             int multiple = ThreadLocalRandom.Current.Next(100, 700);
 
             // Calculate the discount for children based on the number of children
-            double childrenDiscount = (double)children / 3.0;
+            double childrenDiscount = children / 3.0;
 
             // Calculate the price based on the number of adults, number of nights stay, multiple, and rewards points
-            double price = multiple * adults + multiple * childrenDiscount * nightsStay + 0.99 - rewardsPoints;
+            double price = (multiple * adults) + (multiple * childrenDiscount * nightsStay) + 0.99 - rewardsPoints;
 
             // Ensure the price is not negative
             if (price < 0.0)
@@ -58,7 +53,6 @@ public class TripPricer
             {
                 provider = GetProviderName(apiKey, adults);
             } while (providersUsed.Contains(provider));
-
 
             // Add the provider to the list of used providers
             providersUsed.Add(provider);

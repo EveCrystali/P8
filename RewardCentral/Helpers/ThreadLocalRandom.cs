@@ -1,20 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RewardCentral.Helpers;
+﻿namespace RewardCentral.Helpers;
 
 internal static class ThreadLocalRandom
 {
-    private static readonly ThreadLocal<Random> threadLocal = new ThreadLocal<Random>(() => new Random());
+    private static readonly ThreadLocal<Random> threadLocal = new(() => new Random());
 
     public static Random Current => threadLocal.Value;
 
     public static double NextDouble(double minValue, double maxValue)
     {
-        return Current.NextDouble() * (maxValue - minValue) + minValue;
+        return (Current.NextDouble() * (maxValue - minValue)) + minValue;
     }
 
     public static int Next(int minValue, int maxValue)
@@ -22,4 +16,3 @@ internal static class ThreadLocalRandom
         return Current.Next(minValue, maxValue);
     }
 }
-

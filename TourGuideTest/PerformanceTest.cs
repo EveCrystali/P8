@@ -1,14 +1,6 @@
-﻿using GpsUtil.Location;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TourGuide.LibrairiesWrappers.Interfaces;
-using TourGuide.Services.Interfaces;
+﻿using System.Diagnostics;
+using GpsUtil.Location;
 using TourGuide.Users;
-using TourGuide.Utilities;
 using Xunit.Abstractions;
 
 namespace TourGuideTest
@@ -17,16 +9,16 @@ namespace TourGuideTest
     {
         /*
          * Note on performance improvements:
-         * 
+         *
          * The number of generated users for high-volume tests can be easily adjusted using this method:
-         * 
+         *
          *_fixture.Initialize(100000); (for example)
-         * 
-         * 
+         *
+         *
          * These tests can be modified to fit new solutions, as long as the performance metrics at the end of the tests remain consistent.
-         * 
+         *
          * These are the performance metrics we aim to achieve:
-         * 
+         *
          * highVolumeTrackLocation: 100,000 users within 15 minutes:
          * Assert.True(TimeSpan.FromMinutes(15).TotalSeconds >= stopWatch.Elapsed.TotalSeconds);
          *
@@ -45,7 +37,7 @@ namespace TourGuideTest
         }
 
         // TODO: Un"skip" this test
-        [Fact(Skip = ("Delete Skip when you want to pass the test"))]
+        [Fact(Skip = "Delete Skip when you want to pass the test")]
         public void HighVolumeTrackLocation()
         {
             //On peut ici augmenter le nombre d'utilisateurs pour tester les performances
@@ -53,10 +45,10 @@ namespace TourGuideTest
 
             List<User> allUsers = _fixture.TourGuideService.GetAllUsers();
 
-            Stopwatch stopWatch = new Stopwatch();
+            Stopwatch stopWatch = new();
             stopWatch.Start();
 
-            foreach (var user in allUsers)
+            foreach (User user in allUsers)
             {
                 _fixture.TourGuideService.TrackUserLocation(user);
             }
@@ -69,13 +61,13 @@ namespace TourGuideTest
         }
 
         // TODO: Un"skip" this test
-        [Fact(Skip = ("Delete Skip when you want to pass the test"))]
+        [Fact(Skip = "Delete Skip when you want to pass the test")]
         public void HighVolumeGetRewards()
         {
             //On peut ici augmenter le nombre d'utilisateurs pour tester les performances
             _fixture.Initialize(10);
 
-            Stopwatch stopWatch = new Stopwatch();
+            Stopwatch stopWatch = new();
             stopWatch.Start();
 
             Attraction attraction = _fixture.GpsUtil.GetAttractions()[0];
@@ -84,7 +76,7 @@ namespace TourGuideTest
 
             allUsers.ForEach(u => _fixture.RewardsService.CalculateRewards(u));
 
-            foreach (var user in allUsers)
+            foreach (User user in allUsers)
             {
                 Assert.True(user.UserRewards.Count > 0);
             }

@@ -1,7 +1,5 @@
-﻿using GpsUtil.Location;
-using Microsoft.Extensions.Logging;
-using System.Diagnostics;
-using System.Globalization;
+﻿using System.Globalization;
+using GpsUtil.Location;
 using TourGuide.LibrairiesWrappers.Interfaces;
 using TourGuide.Services.Interfaces;
 using TourGuide.Users;
@@ -17,9 +15,9 @@ public class TourGuideService : ITourGuideService
     private readonly IRewardsService _rewardsService;
     private readonly TripPricer.TripPricer _tripPricer;
     public Tracker Tracker { get; private set; }
-    private readonly Dictionary<string, User> _internalUserMap = new();
+    private readonly Dictionary<string, User> _internalUserMap = [];
     private const string TripPricerApiKey = "test-server-api-key";
-    private bool _testMode = true;
+    private readonly bool _testMode = true;
 
     public TourGuideService(ILogger<TourGuideService> logger, IGpsUtil gpsUtil, IRewardsService rewardsService, ILoggerFactory loggerFactory)
     {
@@ -38,7 +36,7 @@ public class TourGuideService : ITourGuideService
             _logger.LogDebug("Finished initializing users");
         }
 
-        var trackerLogger = loggerFactory.CreateLogger<Tracker>();
+        ILogger<Tracker> trackerLogger = loggerFactory.CreateLogger<Tracker>();
 
         Tracker = new Tracker(this, trackerLogger);
         AddShutDownHook();
@@ -140,17 +138,17 @@ public class TourGuideService : ITourGuideService
     }
 
     /**********************************************************************************
-    * 
+    *
     * Methods Below: For Internal Testing
-    * 
+    *
     **********************************************************************************/
 
     private void InitializeInternalUsers()
     {
         for (int i = 0; i < InternalTestHelper.GetInternalUserNumber(); i++)
         {
-            var userName = $"internalUser{i}";
-            var user = new User(Guid.NewGuid(), userName, "000", $"{userName}@tourGuide.com");
+            string userName = $"internalUser{i}";
+            User user = new(Guid.NewGuid(), userName, "000", $"{userName}@tourGuide.com");
             GenerateUserLocationHistory(user);
             _internalUserMap.Add(userName, user);
         }
@@ -162,21 +160,21 @@ public class TourGuideService : ITourGuideService
     {
         for (int i = 0; i < 3; i++)
         {
-            var visitedLocation = new VisitedLocation(user.UserId, new Locations(GenerateRandomLatitude(), GenerateRandomLongitude()), GetRandomTime());
+            VisitedLocation visitedLocation = new(user.UserId, new Locations(GenerateRandomLatitude(), GenerateRandomLongitude()), GetRandomTime());
             user.AddToVisitedLocations(visitedLocation);
         }
     }
 
-    private static readonly Random random = new Random();
+    private static readonly Random random = new();
 
     private double GenerateRandomLongitude()
     {
-        return new Random().NextDouble() * (180 - (-180)) + (-180);
+        return (new Random().NextDouble() * (180 - (-180))) + (-180);
     }
 
     private double GenerateRandomLatitude()
     {
-        return new Random().NextDouble() * (90 - (-90)) + (-90);
+        return (new Random().NextDouble() * (90 - (-90))) + (-90);
     }
 
     private DateTime GetRandomTime()

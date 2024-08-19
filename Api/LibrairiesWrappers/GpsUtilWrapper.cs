@@ -19,6 +19,6 @@ public class GpsUtilWrapper : IGpsUtil
 
     public List<Attraction> GetAttractions()
     {
-        return _gpsUtil.GetAttractions();
+        return GpsUtil.GpsUtil.GetAttractions();
     }
 }

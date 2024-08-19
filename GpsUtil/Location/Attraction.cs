@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GpsUtil.Location;
+﻿namespace GpsUtil.Location;
 
 public class Attraction(string attractionName, string city, string state, double latitude, double longitude) : Locations(latitude, longitude)
 {

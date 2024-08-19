@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TripPricer;
+﻿namespace TripPricer;
 
 public class TripPricerTask : Task<List<Provider>>
 {
@@ -23,9 +17,10 @@ public class TripPricerTask : Task<List<Provider>>
         _children = children;
         _nightsStay = nightsStay;
     }
+
     public async Task<List<Provider>> ExecuteAsync()
     {
-        var tripPricer = new TripPricer();
+        TripPricer tripPricer = new();
         return await Task.Run(() => tripPricer.GetPrice(_apiKey, _attractionId, _adults, _children, _nightsStay, 5));
     }
 }
