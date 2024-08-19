@@ -13,7 +13,7 @@ namespace TourGuideTest
         public TourGuideServiceTour(DependencyFixture fixture)
         {
             _fixture = fixture;
-            var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
+            ILoggerFactory loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
             _logger = loggerFactory.CreateLogger<TourGuideServiceTour>();
         }
 
@@ -21,8 +21,8 @@ namespace TourGuideTest
         public void GetUserLocation()
         {
             _fixture.Initialize(0);
-            var user = new User(Guid.NewGuid(), "jon", "000", "jon@tourGuide.com");
-            var visitedLocation = _fixture.TourGuideService.TrackUserLocation(user);
+            User user = new(Guid.NewGuid(), "jon", "000", "jon@tourGuide.com");
+            VisitedLocation visitedLocation = _fixture.TourGuideService.TrackUserLocation(user);
             _fixture.TourGuideService.Tracker.StopTracking();
 
             Assert.Equal(user.UserId, visitedLocation.UserId);
@@ -32,14 +32,14 @@ namespace TourGuideTest
         public void AddUser()
         {
             _fixture.Initialize(0);
-            var user = new User(Guid.NewGuid(), "jon", "000", "jon@tourGuide.com");
-            var user2 = new User(Guid.NewGuid(), "jon2", "000", "jon2@tourGuide.com");
+            User user = new(Guid.NewGuid(), "jon", "000", "jon@tourGuide.com");
+            User user2 = new(Guid.NewGuid(), "jon2", "000", "jon2@tourGuide.com");
 
             _fixture.TourGuideService.AddUser(user);
             _fixture.TourGuideService.AddUser(user2);
 
-            var retrievedUser = _fixture.TourGuideService.GetUser(user.UserName);
-            var retrievedUser2 = _fixture.TourGuideService.GetUser(user2.UserName);
+            User retrievedUser = _fixture.TourGuideService.GetUser(user.UserName);
+            User retrievedUser2 = _fixture.TourGuideService.GetUser(user2.UserName);
 
             _fixture.TourGuideService.Tracker.StopTracking();
 
@@ -51,8 +51,8 @@ namespace TourGuideTest
         public void GetAllUsers()
         {
             _fixture.Initialize(0);
-            var user = new User(Guid.NewGuid(), "jon", "000", "jon@tourGuide.com");
-            var user2 = new User(Guid.NewGuid(), "jon2", "000", "jon2@tourGuide.com");
+            User user = new(Guid.NewGuid(), "jon", "000", "jon@tourGuide.com");
+            User user2 = new(Guid.NewGuid(), "jon2", "000", "jon2@tourGuide.com");
 
             _fixture.TourGuideService.AddUser(user);
             _fixture.TourGuideService.AddUser(user2);
@@ -69,8 +69,8 @@ namespace TourGuideTest
         public void TrackUser()
         {
             _fixture.Initialize();
-            var user = new User(Guid.NewGuid(), "jon", "000", "jon@tourGuide.com");
-            var visitedLocation = _fixture.TourGuideService.TrackUserLocation(user);
+            User user = new(Guid.NewGuid(), "jon", "000", "jon@tourGuide.com");
+            VisitedLocation visitedLocation = _fixture.TourGuideService.TrackUserLocation(user);
 
             _fixture.TourGuideService.Tracker.StopTracking();
 
@@ -82,8 +82,8 @@ namespace TourGuideTest
         {
             // Arrange
             _fixture.Initialize(0);
-            var user = new User(Guid.NewGuid(), "jon", "000", "jon@tourGuide.com");
-            var visitedLocation = _fixture.TourGuideService.TrackUserLocation(user);
+            User user = new(Guid.NewGuid(), "jon", "000", "jon@tourGuide.com");
+            VisitedLocation visitedLocation = _fixture.TourGuideService.TrackUserLocation(user);
             user.AddToVisitedLocations(visitedLocation);
 
             // Act
@@ -104,7 +104,7 @@ namespace TourGuideTest
         {
             // Arrange
             _fixture.Initialize(0); // Initialize the fixture
-            var user = new User(Guid.NewGuid(), "jon", "000", "jon@tourGuide.com"); // Create a test user
+            User user = new(Guid.NewGuid(), "jon", "000", "jon@tourGuide.com"); // Create a test user
 
             // Act
             List<Provider> providers = _fixture.TourGuideService.GetTripDeals(user); // Get trip deals for the user

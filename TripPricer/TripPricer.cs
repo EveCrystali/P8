@@ -37,10 +37,10 @@ public class TripPricer
             int multiple = ThreadLocalRandom.Current.Next(100, 700);
 
             // Calculate the discount for children based on the number of children
-            double childrenDiscount = (double)children / 3.0;
+            double childrenDiscount = children / 3.0;
 
             // Calculate the price based on the number of adults, number of nights stay, multiple, and rewards points
-            double price = multiple * adults + multiple * childrenDiscount * nightsStay + 0.99 - rewardsPoints;
+            double price = (multiple * adults) + (multiple * childrenDiscount * nightsStay) + 0.99 - rewardsPoints;
 
             // Ensure the price is not negative
             if (price < 0.0)

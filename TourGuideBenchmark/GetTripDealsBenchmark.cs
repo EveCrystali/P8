@@ -18,8 +18,8 @@ namespace TourGuideBenchmark
             _fixture = new DependencyFixture();
             _fixture.Initialize(0); // Initialiser la fixture
 
-            var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
-            var logger = loggerFactory.CreateLogger<TourGuideService>();
+            ILoggerFactory loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
+            ILogger<TourGuideService> logger = loggerFactory.CreateLogger<TourGuideService>();
 
             _tourGuideService = new TourGuideService(
                 logger,

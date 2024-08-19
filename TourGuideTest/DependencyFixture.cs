@@ -21,11 +21,11 @@ namespace TourGuideTest
 
         public void Initialize(int internalUserNumber = 100)
         {
-            var loggerFactory = LoggerFactory.Create(builder =>
+            ILoggerFactory loggerFactory = LoggerFactory.Create(builder =>
             {
                 builder.AddConsole();
             });
-            var tourGuideLogger = loggerFactory.CreateLogger<TourGuideService>();
+            ILogger<TourGuideService> tourGuideLogger = loggerFactory.CreateLogger<TourGuideService>();
 
             InternalTestHelper.SetInternalUserNumber(internalUserNumber);
 

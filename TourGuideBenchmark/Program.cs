@@ -5,6 +5,6 @@ public static class Program
 {
     public static void Main(string[] args)
     {
-        var summary = BenchmarkRunner.Run<GetTripDealsBenchmark>();
+        BenchmarkDotNet.Reports.Summary summary = BenchmarkRunner.Run<GetTripDealsBenchmark>();
     }
 }

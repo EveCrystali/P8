@@ -20,7 +20,7 @@ public class TripPricerTask : Task<List<Provider>>
 
     public async Task<List<Provider>> ExecuteAsync()
     {
-        var tripPricer = new TripPricer();
+        TripPricer tripPricer = new();
         return await Task.Run(() => tripPricer.GetPrice(_apiKey, _attractionId, _adults, _children, _nightsStay, 5));
     }
 }
