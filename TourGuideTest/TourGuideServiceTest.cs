@@ -15,7 +15,6 @@ namespace TourGuideTest
             _fixture = fixture;
             var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
             _logger = loggerFactory.CreateLogger<TourGuideServiceTour>();
-
         }
 
         [Fact]

@@ -46,5 +46,4 @@ public class RewardServiceTest : IClassFixture<DependencyFixture>
 
         Assert.Equal(_fixture.GpsUtil.GetAttractions().Count, userRewards.Count);
     }
-
 }

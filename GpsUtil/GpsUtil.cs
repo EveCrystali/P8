@@ -5,7 +5,7 @@ namespace GpsUtil;
 
 public class GpsUtil
 {
-    // NOTE: This line of code creates a `SemaphoreSlim` object named `rateLimiter` that limits the number of concurrent accesses to a resource to prevent overloading and excessive usage. 
+    // NOTE: This line of code creates a `SemaphoreSlim` object named `rateLimiter` that limits the number of concurrent accesses to a resource to prevent overloading and excessive usage.
     private static readonly SemaphoreSlim rateLimiter = new(1000, 1000);
 
     /// <summary>

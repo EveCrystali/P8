@@ -29,10 +29,9 @@ public class TourGuideController : ControllerBase
         return Ok(location);
     }
 
-
     /// <summary>
     /// Retrieves a json object with an array of 5 elements maximum containing the information below:
-    /// - The name of the attraction 
+    /// - The name of the attraction
     /// - The latitude of the attraction
     /// - The longitude of the attraction
     /// - The latitude of the user
@@ -71,8 +70,6 @@ public class TourGuideController : ControllerBase
         // Return the NearbyAttractionInfos array
         return Ok(nearbyAttractions);
     }
-
-
 
     [HttpGet("getRewards")]
     public ActionResult<List<UserReward>> GetRewards([FromQuery] string userName)

@@ -19,7 +19,7 @@ public class TripPricer
         List<Provider> providers = [];
         HashSet<string> providersUsed = [];
 
-        // HACK: certainly supposed to be optimized next to improve performance 
+        // HACK: certainly supposed to be optimized next to improve performance
         // NOTE: Need to monitor the performance of this function to understand why it is slow when the number of providers is high
 
         // Sleep to simulate some latency
@@ -53,7 +53,6 @@ public class TripPricer
             {
                 provider = GetProviderName(apiKey, adults);
             } while (providersUsed.Contains(provider));
-
 
             // Add the provider to the list of used providers
             providersUsed.Add(provider);

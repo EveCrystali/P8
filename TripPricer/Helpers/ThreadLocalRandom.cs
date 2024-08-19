@@ -16,4 +16,3 @@ internal static class ThreadLocalRandom
         return Current.Next(minValue, maxValue);
     }
 }
-

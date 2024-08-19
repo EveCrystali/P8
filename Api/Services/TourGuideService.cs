@@ -138,9 +138,9 @@ public class TourGuideService : ITourGuideService
     }
 
     /**********************************************************************************
-    * 
+    *
     * Methods Below: For Internal Testing
-    * 
+    *
     **********************************************************************************/
 
     private void InitializeInternalUsers()

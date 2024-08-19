@@ -17,6 +17,7 @@ public class TripPricerTask : Task<List<Provider>>
         _children = children;
         _nightsStay = nightsStay;
     }
+
     public async Task<List<Provider>> ExecuteAsync()
     {
         var tripPricer = new TripPricer();

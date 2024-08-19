@@ -9,16 +9,16 @@ namespace TourGuideTest
     {
         /*
          * Note on performance improvements:
-         * 
+         *
          * The number of generated users for high-volume tests can be easily adjusted using this method:
-         * 
+         *
          *_fixture.Initialize(100000); (for example)
-         * 
-         * 
+         *
+         *
          * These tests can be modified to fit new solutions, as long as the performance metrics at the end of the tests remain consistent.
-         * 
+         *
          * These are the performance metrics we aim to achieve:
-         * 
+         *
          * highVolumeTrackLocation: 100,000 users within 15 minutes:
          * Assert.True(TimeSpan.FromMinutes(15).TotalSeconds >= stopWatch.Elapsed.TotalSeconds);
          *
