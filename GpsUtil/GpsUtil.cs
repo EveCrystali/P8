@@ -8,9 +8,6 @@ public class GpsUtil
     // NOTE: This line of code creates a `SemaphoreSlim` object named `rateLimiter` that limits the number of concurrent accesses to a resource to prevent overloading and excessive usage.
     private static readonly SemaphoreSlim rateLimiter = new(1000, 1000);
 
-    // OPTIMIZE: HighVolumeTrackLocation
-    // FIXME: Need optimization here - Must be able to handle 100 000 UserLocations in less than 15 minutes.
-    // TODO: GOOD FIRST ISSUE
     /// <summary>
     /// Gets the user location.
     /// </summary>
@@ -19,7 +16,7 @@ public class GpsUtil
     public static async Task<VisitedLocation> GetUserLocationAsync(Guid userId)
     {
         // Limit the number of concurrent requests to prevent overloading and excessive usage
-        rateLimiter.Wait();
+        await rateLimiter.WaitAsync();
         try
         {
             // Generate a random longitude between -180 and 180
@@ -43,15 +40,11 @@ public class GpsUtil
         }
     }
 
-    public static List<Attraction> GetAttractions()
+    public static async Task<List<Attraction>> GetAttractionsAsync()
     {
-        rateLimiter.Wait();
-
+        await rateLimiter.WaitAsync();
         try
         {
-            // HACK: line below "Sleep" must be removed to make it faster
-            SleepLighter();
-
             List<Attraction> attractions =
             [
                 new Attraction("Disneyland", "Anaheim", "CA", 33.817595, -117.922008),

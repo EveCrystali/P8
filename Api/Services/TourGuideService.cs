@@ -91,13 +91,11 @@ public class TourGuideService : ITourGuideService
         return providers;
     }
 
-    // OPTIMIZE: HighVolumeTrackLocation
-    // FIXME: Need optimization here - Must be able to handle 100 000 UserLocations in less than 15 minutes.
     public async Task<VisitedLocation> TrackUserLocationAsync(User user)
     {
         VisitedLocation visitedLocation = await _gpsUtil.GetUserLocationAsync(user.UserId);
         user.AddToVisitedLocations(visitedLocation);
-        _rewardsService.CalculateRewardsAsync(user);
+        await _rewardsService.CalculateRewardsAsync(user);
         return visitedLocation;
     }
 
@@ -106,11 +104,11 @@ public class TourGuideService : ITourGuideService
     /// </summary>
     /// <param name="visitedLocation">The location to retrieve nearby attractions for.</param>
     /// <returns>An array of nearby attractions.</returns>
-    public Attraction[] GetNearbyAttractions(VisitedLocation visitedLocation)
+    public async Task<Attraction[]> GetNearbyAttractionsAsync(VisitedLocation visitedLocation)
     {
         // Get all attractions from the GpsUtil
-        List<Attraction> nearbyAttractions = _gpsUtil.GetAttractions()
-            .Where(attraction => _rewardsService.IsWithinAttractionProximity(attraction, visitedLocation.Location))
+        List<Attraction> nearbyAttractions = await _gpsUtil.GetAttractionsAsync();
+        nearbyAttractions = nearbyAttractions.Where(attraction => _rewardsService.IsWithinAttractionProximity(attraction, visitedLocation.Location))
             .ToList();
 
         // Sort the nearby attractions by their distance from the visited location

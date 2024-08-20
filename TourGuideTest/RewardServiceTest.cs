@@ -23,13 +23,12 @@ public class RewardServiceTest : IClassFixture<DependencyFixture>
         _logger = loggerFactory.CreateLogger<RewardServiceTest>();
     }
 
-    // FIXME: The test is failing.
     [Fact]
     public async Task UserGetRewards()
     {
         _fixture.Initialize(0);
         User user = new(Guid.NewGuid(), "jon", "000", "jon@tourGuide.com");
-        Attraction? attraction = _fixture.GpsUtil.GetAttractions()[0];
+        Attraction? attraction = (await _fixture.GpsUtil.GetAttractionsAsync())[0];
         if (attraction == null) { Assert.Fail(); }
         user.AddToVisitedLocations(new VisitedLocation(user.UserId, attraction, DateTime.Now));
         await _fixture.TourGuideService.TrackUserLocationAsync(user);
@@ -39,9 +38,9 @@ public class RewardServiceTest : IClassFixture<DependencyFixture>
     }
 
     [Fact]
-    public void IsWithinAttractionProximity()
+    public async Task IsWithinAttractionProximity()
     {
-        Attraction attraction = _fixture.GpsUtil.GetAttractions()[0];
+        Attraction attraction = (await _fixture.GpsUtil.GetAttractionsAsync())[0];
         Assert.True(_fixture.RewardsService.IsWithinAttractionProximity(attraction, attraction));
     }
 
@@ -56,7 +55,7 @@ public class RewardServiceTest : IClassFixture<DependencyFixture>
         List<UserReward> userRewards = _fixture.TourGuideService.GetUserRewards(user);
         _fixture.TourGuideService.Tracker.StopTracking();
 
-        Assert.Equal(_fixture.GpsUtil.GetAttractions().Count, userRewards.Count);
+        Assert.Equal((await _fixture.GpsUtil.GetAttractionsAsync()).Count, userRewards.Count);
     }
 
     [Fact]

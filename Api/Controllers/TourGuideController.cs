@@ -48,7 +48,7 @@ public class TourGuideController : ControllerBase
         VisitedLocation visitedLocation = await _tourGuideService.GetUserLocationAsync(GetUser(userName));
 
         // Get the array of 5 maximum nearby attractions order by proximity
-        Attraction[] attractions = _tourGuideService.GetNearbyAttractions(visitedLocation);
+        Attraction[] attractions = await _tourGuideService.GetNearbyAttractionsAsync(visitedLocation);
 
         // Create an array to store the NearbyAttractionInfos
         NearbyAttractionInfos[] nearbyAttractions = new NearbyAttractionInfos[5];

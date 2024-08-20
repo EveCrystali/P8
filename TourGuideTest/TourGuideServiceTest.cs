@@ -78,7 +78,7 @@ namespace TourGuideTest
         }
 
         [Fact]
-        public async Task GetNearbyAttractions()
+        public async Task GetNearbyAttractionsAsync()
         {
             // Arrange
             _fixture.Initialize(0);
@@ -87,7 +87,7 @@ namespace TourGuideTest
             user.AddToVisitedLocations(visitedLocation);
 
             // Act
-            Attraction[] attractions = _fixture.TourGuideService.GetNearbyAttractions(visitedLocation);
+            Attraction[] attractions = await _fixture.TourGuideService.GetNearbyAttractionsAsync(visitedLocation);
             _fixture.TourGuideService.Tracker.StopTracking();
 
             // Assert

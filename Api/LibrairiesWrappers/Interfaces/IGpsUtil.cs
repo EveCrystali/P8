@@ -6,6 +6,6 @@ namespace TourGuide.LibrairiesWrappers.Interfaces
     {
         Task<VisitedLocation> GetUserLocationAsync(Guid userId);
 
-        List<Attraction> GetAttractions();
+        Task<List<Attraction>> GetAttractionsAsync();
     }
 }

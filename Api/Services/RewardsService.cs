@@ -34,15 +34,6 @@ public class RewardsService : IRewardsService
         _proximityBuffer = _defaultProximityBuffer;
     }
 
-    /*
-    * This method was not thread safe because using count++ operator whereas count is declared as static.
-    * The issue is that the count variable is declared as static, which means it belongs to the class itself,
-    * not to any instance of the class. However, it is being updated from an instance method CalculateRewardsAsync.
-    * In C#, when a static field is updated from an instance method, it can lead to unexpected behavior,
-    * especially in multi-threaded environments. This is because static fields are shared across all instances of the class,
-    * and updating it from an instance method can cause conflicts between different instances. */
-
-    // OPTIMIZE: HighVolumeTrackLocation
     /// <summary>
     /// Calculates the rewards for a given user.
     /// </summary>
@@ -52,7 +43,7 @@ public class RewardsService : IRewardsService
         Interlocked.Increment(ref count);
 
         HashSet<VisitedLocation> userVisitedLocations = new(user.VisitedLocations);
-        HashSet<Attraction> getAllAttractions = _gpsUtil.GetAttractions().ToHashSet();
+        HashSet<Attraction> getAllAttractions = [.. (await _gpsUtil.GetAttractionsAsync())];
         HashSet<string> existingRewardAttractions = new(user.UserRewards.Select(r => r.Attraction.AttractionName));
 
         var lockObject = new object();

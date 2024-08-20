@@ -36,12 +36,11 @@ namespace TourGuideTest
             _output = output;
         }
 
-        // FIXME: Need optimization here - Must be able to handle 100 000 UserLocations in less than 15 minutes. 
         [Fact]
-        public void HighVolumeTrackLocation()
+        public async Task HighVolumeTrackLocation()
         {
             //On peut ici augmenter le nombre d'utilisateurs pour tester les performances
-            _fixture.Initialize(1000);
+            _fixture.Initialize(100000);
 
             List<User> allUsers = _fixture.TourGuideService.GetAllUsers();
 
@@ -50,7 +49,7 @@ namespace TourGuideTest
 
             foreach (User user in allUsers)
             {
-                _fixture.TourGuideService.TrackUserLocationAsync(user);
+                await _fixture.TourGuideService.TrackUserLocationAsync(user);
             }
 
             stopWatch.Stop();
@@ -63,7 +62,7 @@ namespace TourGuideTest
 
         // TODO: Un"skip" this test
         [Fact(Skip = "Delete Skip when you want to pass the test")]
-        public void HighVolumeGetRewards()
+        public async Task HighVolumeGetRewards()
         {
             //On peut ici augmenter le nombre d'utilisateurs pour tester les performances
             _fixture.Initialize(10);
@@ -71,7 +70,7 @@ namespace TourGuideTest
             Stopwatch stopWatch = new();
             stopWatch.Start();
 
-            Attraction attraction = _fixture.GpsUtil.GetAttractions()[0];
+            Attraction attraction = (await _fixture.GpsUtil.GetAttractionsAsync())[0];
             List<User> allUsers = _fixture.TourGuideService.GetAllUsers();
             allUsers.ForEach(u => u.AddToVisitedLocations(new VisitedLocation(u.UserId, attraction, DateTime.Now)));
 
