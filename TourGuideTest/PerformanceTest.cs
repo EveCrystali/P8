@@ -50,8 +50,9 @@ namespace TourGuideTest
 
             foreach (User user in allUsers)
             {
-                _fixture.TourGuideService.TrackUserLocation(user);
+                _fixture.TourGuideService.TrackUserLocationAsync(user);
             }
+
             stopWatch.Stop();
             _fixture.TourGuideService.Tracker.StopTracking();
 

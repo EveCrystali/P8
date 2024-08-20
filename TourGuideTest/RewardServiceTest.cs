@@ -1,4 +1,5 @@
 ﻿using GpsUtil.Location;
+using Microsoft.Extensions.Logging;
 using TourGuide.Users;
 
 namespace TourGuideTest;
@@ -7,9 +8,19 @@ public class RewardServiceTest : IClassFixture<DependencyFixture>
 {
     private readonly DependencyFixture _fixture;
 
+    private readonly ILogger<RewardServiceTest> _logger;
+
+
     public RewardServiceTest(DependencyFixture fixture)
     {
         _fixture = fixture;
+        var loggerFactory = LoggerFactory.Create(builder =>
+        {
+            builder
+                .AddConsole()
+                .SetMinimumLevel(LogLevel.Debug);
+        });
+        _logger = loggerFactory.CreateLogger<RewardServiceTest>();
     }
 
     [Fact]
@@ -20,7 +31,7 @@ public class RewardServiceTest : IClassFixture<DependencyFixture>
         Attraction? attraction = _fixture.GpsUtil.GetAttractions()[0];
         if (attraction == null) { Assert.Fail(); }
         user.AddToVisitedLocations(new VisitedLocation(user.UserId, attraction, DateTime.Now));
-        _fixture.TourGuideService.TrackUserLocation(user);
+        _fixture.TourGuideService.TrackUserLocationAsync(user);
         List<UserReward> userRewards = user.UserRewards;
         _fixture.TourGuideService.Tracker.StopTracking();
         Assert.Single(userRewards);
@@ -45,5 +56,30 @@ public class RewardServiceTest : IClassFixture<DependencyFixture>
         _fixture.TourGuideService.Tracker.StopTracking();
 
         Assert.Equal(_fixture.GpsUtil.GetAttractions().Count, userRewards.Count);
+    }
+
+    [Fact]
+    public void NearAllAttractionsInLoop()
+    {
+        int numberOfFail = 0;
+        for (int i = 0; i < 10; i++)
+        {
+
+            try
+            {
+
+                _logger.LogDebug($"Loop {i}");
+                NearAllAttractions();
+                _logger.LogInformation($"Success {i}");
+            }
+
+            catch
+            {
+                numberOfFail++;
+                _logger.LogCritical($"Fail number {numberOfFail}");
+            }
+        }
+
+        Assert.Equal(0, numberOfFail);
     }
 }

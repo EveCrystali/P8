@@ -9,7 +9,7 @@ namespace TourGuideBenchmark
         [Benchmark]
         public void BenchmarkGetUserLocation()
         {
-            _tourGuideService.GetUserLocation(_user);
+            _tourGuideService.GetUserLocationAsync(_user);
         }
 
     }

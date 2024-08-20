@@ -25,7 +25,7 @@ public class TourGuideController : ControllerBase
     [HttpGet("getLocation")]
     public async Task<ActionResult<VisitedLocation>> GetLocation([FromQuery] string userName)
     {
-        VisitedLocation location = await _tourGuideService.GetUserLocation(GetUser(userName));
+        VisitedLocation location = await _tourGuideService.GetUserLocationAsync(GetUser(userName));
         return Ok(location);
     }
 
@@ -45,7 +45,7 @@ public class TourGuideController : ControllerBase
     public async Task<ActionResult<List<NearbyAttractionInfos>>> GetNearbyAttractions([FromQuery] string userName)
     {
         // Get the user's current location
-        VisitedLocation visitedLocation = await _tourGuideService.GetUserLocation(GetUser(userName));
+        VisitedLocation visitedLocation = await _tourGuideService.GetUserLocationAsync(GetUser(userName));
 
         // Get the array of 5 maximum nearby attractions order by proximity
         Attraction[] attractions = _tourGuideService.GetNearbyAttractions(visitedLocation);

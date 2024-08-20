@@ -16,7 +16,7 @@ public class GpsUtil
     /// </summary>
     /// <param name="userId">The user id.</param>
     /// <returns>The user location.</returns>
-    public static async Task<VisitedLocation> GetUserLocation(Guid userId)
+    public static async Task<VisitedLocation> GetUserLocationAsync(Guid userId)
     {
         // Limit the number of concurrent requests to prevent overloading and excessive usage
         rateLimiter.Wait();

@@ -47,9 +47,9 @@ public class TourGuideService : ITourGuideService
         return user.UserRewards;
     }
 
-    public async Task<VisitedLocation> GetUserLocation(User user)
+    public async Task<VisitedLocation> GetUserLocationAsync(User user)
     {
-        return user.VisitedLocations.Count != 0 ? user.GetLastVisitedLocation() : await TrackUserLocation(user);
+        return user.VisitedLocations.Count != 0 ? user.GetLastVisitedLocation() : await TrackUserLocationAsync(user);
     }
 
     public User GetUser(string userName)
@@ -93,9 +93,9 @@ public class TourGuideService : ITourGuideService
 
     // OPTIMIZE: HighVolumeTrackLocation
     // FIXME: Need optimization here - Must be able to handle 100 000 UserLocations in less than 15 minutes.
-    public async Task<VisitedLocation> TrackUserLocation(User user)
+    public async Task<VisitedLocation> TrackUserLocationAsync(User user)
     {
-        VisitedLocation visitedLocation = await _gpsUtil.GetUserLocation(user.UserId);
+        VisitedLocation visitedLocation = await _gpsUtil.GetUserLocationAsync(user.UserId);
         user.AddToVisitedLocations(visitedLocation);
         _rewardsService.CalculateRewards(user);
         return visitedLocation;
@@ -147,6 +147,7 @@ public class TourGuideService : ITourGuideService
 
     private void InitializeInternalUsers()
     {
+        _internalUserMap.Clear();
         for (int i = 0; i < InternalTestHelper.GetInternalUserNumber(); i++)
         {
             string userName = $"internalUser{i}";
@@ -155,7 +156,7 @@ public class TourGuideService : ITourGuideService
             _internalUserMap.Add(userName, user);
         }
 
-        _logger.LogDebug($"Created {InternalTestHelper.GetInternalUserNumber()} internal test users.");
+        _logger.LogInformation($"Created {InternalTestHelper.GetInternalUserNumber()} internal test users.");
     }
 
     private void GenerateUserLocationHistory(User user)

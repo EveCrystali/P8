@@ -13,16 +13,16 @@ namespace TourGuideTest
         public TourGuideServiceTour(DependencyFixture fixture)
         {
             _fixture = fixture;
-            ILoggerFactory loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
+            ILoggerFactory loggerFactory = LoggerFactory.Create(builder => builder.AddConsole().SetMinimumLevel(LogLevel.Debug));
             _logger = loggerFactory.CreateLogger<TourGuideServiceTour>();
         }
 
         [Fact]
-        public async Task GetUserLocation()
+        public async Task GetUserLocationAsync()
         {
             _fixture.Initialize(0);
             User user = new(Guid.NewGuid(), "jon", "000", "jon@tourGuide.com");
-            VisitedLocation visitedLocation = await _fixture.TourGuideService.TrackUserLocation(user);
+            VisitedLocation visitedLocation = await _fixture.TourGuideService.TrackUserLocationAsync(user);
             _fixture.TourGuideService.Tracker.StopTracking();
 
             Assert.Equal(user.UserId, visitedLocation.UserId);
@@ -70,7 +70,7 @@ namespace TourGuideTest
         {
             _fixture.Initialize();
             User user = new(Guid.NewGuid(), "jon", "000", "jon@tourGuide.com");
-            VisitedLocation visitedLocation = await _fixture.TourGuideService.TrackUserLocation(user);
+            VisitedLocation visitedLocation = await _fixture.TourGuideService.TrackUserLocationAsync(user);
 
             _fixture.TourGuideService.Tracker.StopTracking();
 
@@ -83,7 +83,7 @@ namespace TourGuideTest
             // Arrange
             _fixture.Initialize(0);
             User user = new(Guid.NewGuid(), "jon", "000", "jon@tourGuide.com");
-            VisitedLocation visitedLocation = await _fixture.TourGuideService.TrackUserLocation(user);
+            VisitedLocation visitedLocation = await _fixture.TourGuideService.TrackUserLocationAsync(user);
             user.AddToVisitedLocations(visitedLocation);
 
             // Act
