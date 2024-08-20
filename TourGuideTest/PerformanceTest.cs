@@ -75,7 +75,7 @@ namespace TourGuideTest
             List<User> allUsers = _fixture.TourGuideService.GetAllUsers();
             allUsers.ForEach(u => u.AddToVisitedLocations(new VisitedLocation(u.UserId, attraction, DateTime.Now)));
 
-            allUsers.ForEach(u => _fixture.RewardsService.CalculateRewards(u));
+            allUsers.ForEach(u => _fixture.RewardsService.CalculateRewardsAsync(u));
 
             foreach (User user in allUsers)
             {

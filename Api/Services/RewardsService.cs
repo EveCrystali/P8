@@ -37,7 +37,7 @@ public class RewardsService : IRewardsService
     /*
     * This method was not thread safe because using count++ operator whereas count is declared as static.
     * The issue is that the count variable is declared as static, which means it belongs to the class itself,
-    * not to any instance of the class. However, it is being updated from an instance method CalculateRewards.
+    * not to any instance of the class. However, it is being updated from an instance method CalculateRewardsAsync.
     * In C#, when a static field is updated from an instance method, it can lead to unexpected behavior,
     * especially in multi-threaded environments. This is because static fields are shared across all instances of the class,
     * and updating it from an instance method can cause conflicts between different instances. */
@@ -47,42 +47,38 @@ public class RewardsService : IRewardsService
     /// Calculates the rewards for a given user.
     /// </summary>
     /// <param name="user">The user.</param>
-    public void CalculateRewards(User user)
+    public async Task CalculateRewardsAsync(User user)
     {
-        // Increment the count of rewards calculations
         Interlocked.Increment(ref count);
 
-        // Set var copy to avoid System.InvalidOperationException : Collection was modified; enumeration operation may not execute."
-        List<VisitedLocation> userVisitedLocations = new(user.VisitedLocations);
-        List<Attraction> getAllAttractions = _gpsUtil.GetAttractions();
-        // Create a hash set of existing reward attraction names to avoid duplicates
+        HashSet<VisitedLocation> userVisitedLocations = new(user.VisitedLocations);
+        HashSet<Attraction> getAllAttractions = _gpsUtil.GetAttractions().ToHashSet();
         HashSet<string> existingRewardAttractions = new(user.UserRewards.Select(r => r.Attraction.AttractionName));
 
-        // Create a list to store the new rewards to add to the user at the end
-        List<UserReward> rewardsToAdd = [];
-
-        foreach (VisitedLocation visitedLocation in userVisitedLocations)
-        {
-            foreach (Attraction attraction in getAllAttractions)
+        var lockObject = new object();
+        HashSet<UserReward> rewardsToAdd = [];
+        await Task.Run(() =>
             {
-                // Check if the attraction is not already a reward and if the user is near the attraction
-                if (!existingRewardAttractions.Contains(attraction.AttractionName) && NearAttraction(visitedLocation, attraction))
+                Parallel.ForEachAsync(userVisitedLocations, async (visitedLocation, token) =>
                 {
-                    // Create a new UserReward
-                    UserReward newReward = new(visitedLocation, attraction, GetRewardPoints(attraction, user));
-                    // Add the reward to the list of rewards to add
-                    rewardsToAdd.Add(newReward);
-
-                    // Add the attraction to the list of existing rewards to avoid duplicates
-                    existingRewardAttractions.Add(attraction.AttractionName);
-                }
-            }
-        }
-
-        // Add the new rewards to the user's rewards
+                    foreach (var attraction in getAllAttractions)
+                    {
+                        lock (lockObject)
+                        {
+                            if (!existingRewardAttractions.Contains(attraction.AttractionName) && NearAttraction(visitedLocation, attraction))
+                            {
+                                UserReward newReward = new(visitedLocation, attraction, GetRewardPoints(attraction, user));
+                                rewardsToAdd.Add(newReward);
+                                existingRewardAttractions.Add(attraction.AttractionName);
+                            }
+                        }
+                    }
+                });
+            });
         user.UserRewards.AddRange(rewardsToAdd);
     }
-    
+
+
     /// <summary>
     /// Checks if a given location is within the proximity of a given attraction (= earth circumference). It enables to check that GetDistance returns a reasonable value.
     /// </summary>

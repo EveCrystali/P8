@@ -45,13 +45,13 @@ public class RewardServiceTest : IClassFixture<DependencyFixture>
     }
 
     [Fact]
-    public void NearAllAttractions()
+    public async Task NearAllAttractions()
     {
         _fixture.Initialize(1);
         _fixture.RewardsService.SetProximityBuffer(int.MaxValue);
 
         User user = _fixture.TourGuideService.GetAllUsers()[0];
-        _fixture.RewardsService.CalculateRewards(user);
+        await _fixture.RewardsService.CalculateRewardsAsync(user);
         List<UserReward> userRewards = _fixture.TourGuideService.GetUserRewards(user);
         _fixture.TourGuideService.Tracker.StopTracking();
 
@@ -59,7 +59,7 @@ public class RewardServiceTest : IClassFixture<DependencyFixture>
     }
 
     [Fact]
-    public void NearAllAttractionsInLoop()
+    public async Task NearAllAttractionsInLoop()
     {
         int numberOfFail = 0;
         for (int i = 0; i < 10; i++)
@@ -67,9 +67,8 @@ public class RewardServiceTest : IClassFixture<DependencyFixture>
 
             try
             {
-
                 _logger.LogDebug($"Loop {i}");
-                NearAllAttractions();
+                await Task.FromResult(NearAllAttractions());
                 _logger.LogInformation($"Success {i}");
             }
 

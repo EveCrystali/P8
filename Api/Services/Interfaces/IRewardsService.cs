@@ -5,7 +5,7 @@ namespace TourGuide.Services.Interfaces
 {
     public interface IRewardsService
     {
-        void CalculateRewards(User user);
+        Task CalculateRewardsAsync(User user);
 
         double GetDistance(Locations loc1, Locations loc2);
 
