@@ -13,16 +13,16 @@ namespace TourGuideTest
         public TourGuideServiceTour(DependencyFixture fixture)
         {
             _fixture = fixture;
-            ILoggerFactory loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
+            ILoggerFactory loggerFactory = LoggerFactory.Create(builder => builder.AddConsole().SetMinimumLevel(LogLevel.Debug));
             _logger = loggerFactory.CreateLogger<TourGuideServiceTour>();
         }
 
         [Fact]
-        public void GetUserLocation()
+        public async Task GetUserLocationAsync()
         {
             _fixture.Initialize(0);
             User user = new(Guid.NewGuid(), "jon", "000", "jon@tourGuide.com");
-            VisitedLocation visitedLocation = _fixture.TourGuideService.TrackUserLocation(user);
+            VisitedLocation visitedLocation = await _fixture.TourGuideService.TrackUserLocationAsync(user);
             _fixture.TourGuideService.Tracker.StopTracking();
 
             Assert.Equal(user.UserId, visitedLocation.UserId);
@@ -66,11 +66,11 @@ namespace TourGuideTest
         }
 
         [Fact]
-        public void TrackUser()
+        public async Task TrackUser()
         {
             _fixture.Initialize();
             User user = new(Guid.NewGuid(), "jon", "000", "jon@tourGuide.com");
-            VisitedLocation visitedLocation = _fixture.TourGuideService.TrackUserLocation(user);
+            VisitedLocation visitedLocation = await _fixture.TourGuideService.TrackUserLocationAsync(user);
 
             _fixture.TourGuideService.Tracker.StopTracking();
 
@@ -78,16 +78,16 @@ namespace TourGuideTest
         }
 
         [Fact]
-        public void GetNearbyAttractions()
+        public async Task GetNearbyAttractionsAsync()
         {
             // Arrange
             _fixture.Initialize(0);
             User user = new(Guid.NewGuid(), "jon", "000", "jon@tourGuide.com");
-            VisitedLocation visitedLocation = _fixture.TourGuideService.TrackUserLocation(user);
+            VisitedLocation visitedLocation = await _fixture.TourGuideService.TrackUserLocationAsync(user);
             user.AddToVisitedLocations(visitedLocation);
 
             // Act
-            Attraction[] attractions = _fixture.TourGuideService.GetNearbyAttractions(visitedLocation);
+            Attraction[] attractions = await _fixture.TourGuideService.GetNearbyAttractionsAsync(visitedLocation);
             _fixture.TourGuideService.Tracker.StopTracking();
 
             // Assert

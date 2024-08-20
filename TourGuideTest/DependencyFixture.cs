@@ -23,7 +23,7 @@ namespace TourGuideTest
         {
             ILoggerFactory loggerFactory = LoggerFactory.Create(builder =>
             {
-                builder.AddConsole();
+                builder.AddConsole().SetMinimumLevel(LogLevel.Debug);
             });
             ILogger<TourGuideService> tourGuideLogger = loggerFactory.CreateLogger<TourGuideService>();
 

@@ -13,16 +13,12 @@ public class GpsUtil
     /// </summary>
     /// <param name="userId">The user id.</param>
     /// <returns>The user location.</returns>
-    public VisitedLocation GetUserLocation(Guid userId)
+    public static async Task<VisitedLocation> GetUserLocationAsync(Guid userId)
     {
         // Limit the number of concurrent requests to prevent overloading and excessive usage
-        rateLimiter.Wait();
+        await rateLimiter.WaitAsync();
         try
         {
-            // OPTIMIZE: This line of code is a temporary fix and should be removed in the future
-            // Sleep for a short period of time to simulate the time it takes to get the user location
-            Sleep();
-
             // Generate a random longitude between -180 and 180
             double longitude = ThreadLocalRandom.NextDouble(-180.0, 180.0);
             longitude = Math.Round(longitude, 6);
@@ -35,7 +31,7 @@ public class GpsUtil
             VisitedLocation visitedLocation = new(userId, new Locations(latitude, longitude), DateTime.UtcNow);
 
             // Return the visited location
-            return visitedLocation;
+            return await Task.FromResult(visitedLocation);
         }
         finally
         {
@@ -44,15 +40,11 @@ public class GpsUtil
         }
     }
 
-    public static List<Attraction> GetAttractions()
+    public static async Task<List<Attraction>> GetAttractionsAsync()
     {
-        rateLimiter.Wait();
-
+        await rateLimiter.WaitAsync();
         try
         {
-            // OPTIMIZE: line below "Sleep" must be removed to make it faster
-            SleepLighter();
-
             List<Attraction> attractions =
             [
                 new Attraction("Disneyland", "Anaheim", "CA", 33.817595, -117.922008),
@@ -89,12 +81,6 @@ public class GpsUtil
         {
             rateLimiter.Release();
         }
-    }
-
-    private static void Sleep()
-    {
-        int delay = ThreadLocalRandom.Current.Next(30, 100);
-        Thread.Sleep(delay);
     }
 
     private static void SleepLighter()
