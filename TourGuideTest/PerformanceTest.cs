@@ -60,12 +60,12 @@ namespace TourGuideTest
             Assert.True(TimeSpan.FromMinutes(15).TotalSeconds >= stopWatch.Elapsed.TotalSeconds);
         }
 
-        // TODO: Un"skip" this test
-        [Fact(Skip = "Delete Skip when you want to pass the test")]
+        // DONE: Un"skip" this test
+        [Fact]
         public async Task HighVolumeGetRewards()
         {
             //On peut ici augmenter le nombre d'utilisateurs pour tester les performances
-            _fixture.Initialize(10);
+            _fixture.Initialize(100000);
 
             Stopwatch stopWatch = new();
             stopWatch.Start();
@@ -74,13 +74,20 @@ namespace TourGuideTest
             List<User> allUsers = _fixture.TourGuideService.GetAllUsers();
             allUsers.ForEach(u => u.AddToVisitedLocations(new VisitedLocation(u.UserId, attraction, DateTime.Now)));
 
-            allUsers.ForEach(u => _fixture.RewardsService.CalculateRewardsAsync(u));
+            // Create a list of tasks to run CalculateRewardsAsync in parallel
+            List<Task> tasks = [];
+            allUsers.ForEach(u => tasks.Add(_fixture.RewardsService.CalculateRewardsAsync(u)));
+
+            // Await for all tasks to be completed
+            await Task.WhenAll(tasks);
 
             foreach (User user in allUsers)
             {
-                Assert.True(user.UserRewards.Count > 0);
+                Assert.True(user.UserRewards.Count > 0, $"User {user.UserName} has no rewards.");
             }
+
             stopWatch.Stop();
+
             _fixture.TourGuideService.Tracker.StopTracking();
 
             _output.WriteLine($"highVolumeGetRewards: Time Elapsed: {stopWatch.Elapsed.TotalSeconds} seconds.");
