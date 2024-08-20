@@ -1,4 +1,5 @@
-﻿using GpsUtil.Location;
+﻿using System.Collections.Concurrent;
+using GpsUtil.Location;
 using TourGuide.LibrairiesWrappers.Interfaces;
 using TourGuide.Services.Interfaces;
 using TourGuide.Users;
@@ -16,6 +17,7 @@ public class RewardsService : IRewardsService
     private readonly IGpsUtil _gpsUtil;
     private readonly IRewardCentral _rewardsCentral;
     private static int count = 0;
+    private static readonly object lockObject = new();
 
     public RewardsService(IGpsUtil gpsUtil, IRewardCentral rewardCentral)
     {
@@ -46,27 +48,26 @@ public class RewardsService : IRewardsService
         HashSet<Attraction> getAllAttractions = [.. (await _gpsUtil.GetAttractionsAsync())];
         HashSet<string> existingRewardAttractions = new(user.UserRewards.Select(r => r.Attraction.AttractionName));
 
-        var lockObject = new object();
-        HashSet<UserReward> rewardsToAdd = [];
-        await Task.Run(() =>
+        ConcurrentBag<UserReward> rewardsToAdd = [];
+        await Parallel.ForEachAsync(userVisitedLocations, async (visitedLocation, token) =>
+        {
+            foreach (var attraction in getAllAttractions)
             {
-                Parallel.ForEachAsync(userVisitedLocations, async (visitedLocation, token) =>
+                lock (lockObject)
                 {
-                    foreach (var attraction in getAllAttractions)
+                    if (!existingRewardAttractions.Contains(attraction.AttractionName) && NearAttraction(visitedLocation, attraction))
                     {
-                        lock (lockObject)
-                        {
-                            if (!existingRewardAttractions.Contains(attraction.AttractionName) && NearAttraction(visitedLocation, attraction))
-                            {
-                                UserReward newReward = new(visitedLocation, attraction, GetRewardPoints(attraction, user));
-                                rewardsToAdd.Add(newReward);
-                                existingRewardAttractions.Add(attraction.AttractionName);
-                            }
-                        }
+                        UserReward newReward = new(visitedLocation, attraction, GetRewardPoints(attraction, user));
+                        rewardsToAdd.Add(newReward);
+                        existingRewardAttractions.Add(attraction.AttractionName);
                     }
-                });
-            });
-        user.UserRewards.AddRange(rewardsToAdd);
+                }
+            }
+        });
+        lock(lockObject)
+        {
+            user.UserRewards.AddRange(rewardsToAdd);
+        }
     }
 
 
