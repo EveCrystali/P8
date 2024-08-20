@@ -23,15 +23,16 @@ public class RewardServiceTest : IClassFixture<DependencyFixture>
         _logger = loggerFactory.CreateLogger<RewardServiceTest>();
     }
 
+    // FIXME: The test is failing.
     [Fact]
-    public void UserGetRewards()
+    public async Task UserGetRewards()
     {
         _fixture.Initialize(0);
         User user = new(Guid.NewGuid(), "jon", "000", "jon@tourGuide.com");
         Attraction? attraction = _fixture.GpsUtil.GetAttractions()[0];
         if (attraction == null) { Assert.Fail(); }
         user.AddToVisitedLocations(new VisitedLocation(user.UserId, attraction, DateTime.Now));
-        _fixture.TourGuideService.TrackUserLocationAsync(user);
+        await _fixture.TourGuideService.TrackUserLocationAsync(user);
         List<UserReward> userRewards = user.UserRewards;
         _fixture.TourGuideService.Tracker.StopTracking();
         Assert.Single(userRewards);
