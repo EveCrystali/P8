@@ -51,7 +51,7 @@ public class RewardsService : IRewardsService
         ConcurrentBag<UserReward> rewardsToAdd = [];
         await Parallel.ForEachAsync(userVisitedLocations, async (visitedLocation, token) =>
         {
-            foreach (var attraction in getAllAttractions)
+            foreach (Attraction attraction in getAllAttractions)
             {
                 lock (lockObject)
                 {
@@ -64,12 +64,11 @@ public class RewardsService : IRewardsService
                 }
             }
         });
-        lock(lockObject)
+        lock (lockObject)
         {
             user.UserRewards.AddRange(rewardsToAdd);
         }
     }
-
 
     /// <summary>
     /// Checks if a given location is within the proximity of a given attraction (= earth circumference). It enables to check that GetDistance returns a reasonable value.

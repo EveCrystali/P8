@@ -10,11 +10,10 @@ public class RewardServiceTest : IClassFixture<DependencyFixture>
 
     private readonly ILogger<RewardServiceTest> _logger;
 
-
     public RewardServiceTest(DependencyFixture fixture)
     {
         _fixture = fixture;
-        var loggerFactory = LoggerFactory.Create(builder =>
+        ILoggerFactory loggerFactory = LoggerFactory.Create(builder =>
         {
             builder
                 .AddConsole()
@@ -44,8 +43,7 @@ public class RewardServiceTest : IClassFixture<DependencyFixture>
         Assert.True(_fixture.RewardsService.IsWithinAttractionProximity(attraction, attraction));
     }
 
-    [Fact]
-    public async Task NearAllAttractions()
+    private async Task NearAllAttractions()
     {
         _fixture.Initialize(1);
         _fixture.RewardsService.SetProximityBuffer(int.MaxValue);
@@ -64,14 +62,12 @@ public class RewardServiceTest : IClassFixture<DependencyFixture>
         int numberOfFail = 0;
         for (int i = 0; i < 10; i++)
         {
-
             try
             {
                 _logger.LogDebug($"Loop {i}");
                 await Task.FromResult(NearAllAttractions());
                 _logger.LogInformation($"Success {i}");
             }
-
             catch
             {
                 numberOfFail++;
