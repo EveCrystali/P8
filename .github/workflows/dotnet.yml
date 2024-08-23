@@ -25,16 +25,11 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
 
-  code_quality:
-
+  sonarcloud:
+    name: SonarCloud
     runs-on: windows-latest
-
     steps:
-        - name: dotnet-sonarscanner
-          uses: Secbyte/dotnet-sonarscanner@v2.3
-          with:
-            buildCommand: dotnet restore --force-evaluate
-            testCommand: dotnet test --no-build --verbosity normal
-            projectKey: EveCrystali_P8
-            projectName: P8
-            sonarOrganisation: evecrystali
+      - uses: actions/checkout@v2
+        with:
+          # Shallow clones should be disabled for a better relevancy of analysis
+          fetch-depth: 0
