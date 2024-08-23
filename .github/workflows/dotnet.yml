@@ -37,6 +37,8 @@ jobs:
 
     steps:
       - name: Run Code Analysis
-        uses: github/codeql-action/analyze@v2
+        uses: dotnet/code-analysis@v1
+        id: code-analysis
         with:
-          languages: 'csharp'
+          solution: TourGuide.sln
+          build-breaking: false
