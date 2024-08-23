@@ -19,7 +19,7 @@ jobs:
         dotnet-version: 8.0.x
         cache: true
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore --force-evaluate
     - name: Build
       run: dotnet build --no-restore
     - name: Test
@@ -36,10 +36,7 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: CodeAnalysis
-        uses: codeanalysis/codeanalysis@v1
+      - name: Run Code Analysis
+        uses: github/codeql-action/analyze@v2
         with:
-          codeanalysis-version: 2.1.0
-          path: ./
-          ruleset: "Microsoft.CodeAnalysis.CSharp.CodeStyle"
-          output: "console"
+          languages: 'csharp'
