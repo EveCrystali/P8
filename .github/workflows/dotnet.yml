@@ -24,21 +24,17 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
-    - name: Upload dotnet test results
-      uses: actions/upload-artifact@v4
-      with:
-        name: dotnet-results
-        path: TestResults
-      if: ${{ always() }}
 
   code_quality:
 
     runs-on: windows-latest
 
     steps:
-      - name: Run Code Analysis
-        uses: dotnet/code-analysis@v1
-        id: code-analysis
-        with:
-          solution: TourGuide.sln
-          build-breaking: false
+        - name: dotnet-sonarscanner
+          uses: Secbyte/dotnet-sonarscanner@v2.3
+          with:
+            buildCommand: dotnet restore --force-evaluate
+            testCommand: dotnet test --no-build --verbosity normal
+            projectKey: EveCrystali_P8
+            projectName: P8
+            sonarOrganisation: evecrystali
