@@ -29,6 +29,15 @@ jobs:
       run: dotnet build TourGuide.sln --no-restore
     - name: Test the solution
       run: dotnet test TourGuide.sln --no-build --verbosity normal
+    - name: Publish build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-artifacts
+        path: |
+          **/bin/Release
+          **/bin/Debug
+        retention-days: 30
+
 
   sonarcloud:
     name: SonarCloud
