@@ -18,16 +18,13 @@ jobs:
       with:
         dotnet-version: 8.0.x
         cache: true
+    - name: Copy packages.lock.json to root
+      run: |
+        cp Api/packages.lock.json ./packages.lock.json
     - name: Restore .NET tools
       run: dotnet tool restore
     - name: Restore dependencies
       run: dotnet restore --locked-mode
-    - name: Check if packages.lock.json exists
-      run: |
-        if [ ! -f "Api/packages.lock.json" ]; then
-          echo "File not found!"
-          exit 1
-        fi
     - name: Build the solution
       run: dotnet build TourGuide.sln --no-restore
     - name: Test the solution
