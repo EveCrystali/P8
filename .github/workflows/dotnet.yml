@@ -18,10 +18,16 @@ jobs:
       with:
         dotnet-version: 8.0.x
         cache: true
-    - name: Restore dependencies for Api project
-      run: dotnet restore Api/TourGuide.csproj --force-evaluate
-    - name: Restore dependencies for the solution
-      run: dotnet restore TourGuide.sln --force-evaluate
+    - name: Restore .NET tools
+      run: dotnet tool restore
+    - name: Restore dependencies
+      run: dotnet restore --locked-mode
+    - name: Check if packages.lock.json exists
+      run: |
+        if [ ! -f "Api/packages.lock.json" ]; then
+          echo "File not found!"
+          exit 1
+        fi
     - name: Build the solution
       run: dotnet build TourGuide.sln --no-restore
     - name: Test the solution
