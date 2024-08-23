@@ -18,12 +18,14 @@ jobs:
       with:
         dotnet-version: 8.0.x
         cache: true
-    - name: Restore dependencies
-      run: dotnet restore --force-evaluate
-    - name: Build
-      run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+    - name: Restore dependencies for Api project
+      run: dotnet restore Api/TourGuide.csproj --force-evaluate
+    - name: Restore dependencies for the solution
+      run: dotnet restore TourGuide.sln --force-evaluate
+    - name: Build the solution
+      run: dotnet build TourGuide.sln --no-restore
+    - name: Test the solution
+      run: dotnet test TourGuide.sln --no-build --verbosity normal
 
   sonarcloud:
     name: SonarCloud
