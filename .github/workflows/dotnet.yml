@@ -13,7 +13,6 @@ permissions:
 
 jobs:
   build:
-
     runs-on: windows-latest
 
     steps:
@@ -32,15 +31,6 @@ jobs:
       run: dotnet restore --locked-mode
     - name: Build the solution
       run: dotnet build TourGuide.sln --no-restore
-    - name: Test the solution
-      run: dotnet test TourGuide.sln --logger trx --results-directory ./TestResults
-    - name: Test Report
-      uses: dorny/test-reporter@v1
-      if: success() || failure()
-      with:
-        name: Tests
-        path: '**/TestResults/*.trx'
-        reporter: dotnet-trx
     - name: Publish build artifacts
       uses: actions/upload-artifact@v4
       with:
@@ -50,12 +40,48 @@ jobs:
           **/bin/Debug
         retention-days: 30
 
+  test:
+    runs-on: windows-latest
+    needs: build
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Download build artifacts
+      uses: actions/download-artifact@v2
+      with:
+        name: build-artifacts
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+    - name: Test the solution
+      run: dotnet test TourGuide.sln --logger trx --results-directory ./TestResults
+    - name: Test Report
+      uses: dorny/test-reporter@v1
+      if: success() || failure()
+      with:
+        name: Tests
+        path: '**/TestResults/*.trx'
+        reporter: dotnet-trx
 
   sonarcloud:
-    name: SonarCloud
     runs-on: windows-latest
+    needs: build
+
     steps:
-      - uses: actions/checkout@v2
-        with:
-          # Shallow clones should be disabled for a better relevancy of analysis
-          fetch-depth: 0
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+    - name: Install SonarScanner
+      run: dotnet tool install --global dotnet-sonarscanner
+    - name: SonarCloud Scan
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      run: |
+        dotnet sonarscanner begin /k:"EveCrystali_P8" /o:"evecrystali" /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+        dotnet build TourGuide.sln
+        dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
