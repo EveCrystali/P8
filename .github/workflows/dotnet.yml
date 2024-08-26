@@ -62,6 +62,10 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
+    - name: Restore .NET tools
+      run: dotnet tool restore
+    - name: Restore dependencies
+      run: dotnet restore --locked-mode
     - name: Test the solution
       run: dotnet test TourGuide.sln --logger trx --results-directory ./TestResults
     - name: Test Report
