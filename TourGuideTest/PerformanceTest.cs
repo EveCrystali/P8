@@ -60,7 +60,6 @@ namespace TourGuideTest
             Assert.True(TimeSpan.FromMinutes(15).TotalSeconds >= stopWatch.Elapsed.TotalSeconds);
         }
 
-        // DONE: Un"skip" this test
         [Fact]
         public async Task HighVolumeGetRewards()
         {
