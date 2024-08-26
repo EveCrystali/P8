@@ -28,7 +28,14 @@ jobs:
     - name: Build the solution
       run: dotnet build TourGuide.sln --no-restore
     - name: Test the solution
-      run: dotnet test TourGuide.sln --no-build --verbosity normal
+      run: dotnet test TourGuide.sln --logger trx
+    - name: Test Report
+      uses: dorny/test-reporter@v1
+      if: success() || failure()
+      with:
+        name: Tests
+        path: WebApi.Tests/TestResults/*.trx
+        reporter: dotnet-trx
     - name: Publish build artifacts
       uses: actions/upload-artifact@v4
       with:
