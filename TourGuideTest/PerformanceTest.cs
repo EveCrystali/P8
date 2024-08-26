@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Concurrent;
+using System.Diagnostics;
 using GpsUtil.Location;
 using TourGuide.Users;
 using Xunit.Abstractions;
@@ -74,7 +75,7 @@ namespace TourGuideTest
             allUsers.ForEach(u => u.AddToVisitedLocations(new VisitedLocation(u.UserId, attraction, DateTime.Now)));
 
             // Create a list of tasks to run CalculateRewardsAsync in parallel
-            List<Task> tasks = [];
+            ConcurrentBag<Task> tasks = [];
             allUsers.ForEach(u => tasks.Add(_fixture.RewardsService.CalculateRewardsAsync(u)));
 
             // Await for all tasks to be completed

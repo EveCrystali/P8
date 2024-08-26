@@ -49,7 +49,7 @@ public class RewardsService : IRewardsService
         HashSet<string> existingRewardAttractions = new(user.UserRewards.Select(r => r.Attraction.AttractionName));
 
         ConcurrentBag<UserReward> rewardsToAdd = [];
-        await Parallel.ForEachAsync(userVisitedLocations, async (visitedLocation, token) =>
+        Parallel.ForEach(userVisitedLocations, visitedLocation =>
         {
             foreach (Attraction attraction in getAllAttractions)
             {
