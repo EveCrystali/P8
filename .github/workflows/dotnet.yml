@@ -31,7 +31,7 @@ jobs:
       run: dotnet restore --locked-mode
     - name: Build the solution
       run: dotnet build TourGuide.sln --no-restore
-      name: Publish build artifacts
+    - name: Publish build artifacts
       uses: actions/upload-artifact@v4
       with:
         name: build-artifacts
@@ -51,7 +51,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Download build artifacts
-    - uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v4
+      with:
+        name: build-artifacts
     - name: List files
       run: |
         echo "Listing artifacts in the current directory"
