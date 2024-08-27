@@ -34,7 +34,7 @@ public class RewardsService : IRewardsService
     public void SetDefaultProximityBuffer()
     {
         _proximityBuffer = _defaultProximityBuffer;
-    }
+
 
     /// <summary>
     /// Calculates the rewards for a given user.
