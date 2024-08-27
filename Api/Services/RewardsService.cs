@@ -29,7 +29,7 @@ public class RewardsService : IRewardsService
     public void SetProximityBuffer(int proximityBuffer)
     {
         _proximityBuffer = proximityBuffer;
-    }
+    
 
     public void SetDefaultProximityBuffer()
     {
