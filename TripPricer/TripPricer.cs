@@ -1,4 +1,7 @@
-﻿using TripPricer.Helpers;
+﻿using System.Linq.Expressions;
+using System.Reflection;
+using System.Reflection.Emit;
+using TripPricer.Helpers;
 
 namespace TripPricer;
 
@@ -75,29 +78,32 @@ public class TripPricer
     {
         // Generate a random multiple between 1 and 10 to select a provider name
         // NextInt is inclusive of the minimum and exclusive of the maximum !!
-        int multiple = ThreadLocalRandom.Current.Next(1, 11);
+        int index = ThreadLocalRandom.Current.Next(0, providerNames.Length);
 
-        // Switch on the multiple to select the provider name
-        return multiple switch
-        {
-            1 => "Holiday Travels",
-            2 => "Enterprize Ventures Limited",
-            3 => "Sunny Days",
-            4 => "FlyAway Trips",
-            5 => "United Partners Vacations",
-            6 => "Dream Trips",
-            7 => "Live Free",
-            8 => "Dancing Waves Cruselines and Partners",
-            9 => "AdventureCo",
-            // Default to Cure-Your-Blues
-            _ => "Cure-Your-Blues",
-        };
+        return providerNames[index];
     }
 
+    /// <summary>
+    /// Gets the number of unique provider names.
+    /// </summary>
+    /// <returns>The number of unique provider names.</returns>
     public static int GetProviderNameCaseCount()
     {
-        // HACK: return manually for now
-        // TODO: implement this function to calculate the number of unique provider names automatically using reflexion
-        return 10;
+        return providerNames.Length;
     }
+
+    private static readonly string[] providerNames =
+    [
+        "Holiday Travels",
+        "Enterprize Ventures Limited",
+        "Sunny Days",
+        "FlyAway Trips",
+        "United Partners Vacations",
+        "Dream Trips",
+        "Live Free",
+        "Dancing Waves Cruselines and Partners",
+        "AdventureCo",
+        "Cure-Your-Blues"
+     ];
+
 }

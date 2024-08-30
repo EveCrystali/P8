@@ -31,7 +31,7 @@ public class GpsUtil
             VisitedLocation visitedLocation = new(userId, new Locations(latitude, longitude), DateTime.UtcNow);
 
             // Return the visited location
-            return await Task.FromResult(visitedLocation);
+            return visitedLocation;
         }
         finally
         {
