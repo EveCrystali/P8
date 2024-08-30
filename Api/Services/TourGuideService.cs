@@ -91,13 +91,27 @@ public class TourGuideService : ITourGuideService
         return providers;
     }
 
+    /// <summary>
+    /// Tracks the location of a user and adds it to the list of visited locations.
+    /// Also updates the user's rewards.
+    /// </summary>
+    /// <param name="user">The user to track.</param>
+    /// <returns>The VisitedLocation that was added to the user.</returns>
     public async Task<VisitedLocation> TrackUserLocationAsync(User user)
     {
+        // Get the current location of the user from the GpsUtil
         VisitedLocation visitedLocation = await _gpsUtil.GetUserLocationAsync(user.UserId);
+        
+        // Add the location to the user's visited locations
         user.AddToVisitedLocations(visitedLocation);
+        
+        // Recalculate the rewards for the user
         await _rewardsService.CalculateRewardsAsync(user);
+        
+        // Return the added VisitedLocation
         return visitedLocation;
     }
+
 
     /// <summary>
     /// Retrieves an sorted array of 5 maximum nearby attractions for a given visited location.

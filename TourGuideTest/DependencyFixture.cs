@@ -19,6 +19,10 @@ namespace TourGuideTest
             Initialize();
         }
 
+        /// <summary>
+        /// Initializes the dependencies for the test fixture.
+        /// </summary>
+        /// <param name="internalUserNumber">The number of internal users to initialize. Defaults to 100.</param>
         public void Initialize(int internalUserNumber = 100)
         {
             ILoggerFactory loggerFactory = LoggerFactory.Create(builder =>

@@ -84,7 +84,6 @@ namespace TourGuideTest
             _fixture.Initialize(0);
             User user = new(Guid.NewGuid(), "jon", "000", "jon@tourGuide.com");
             VisitedLocation visitedLocation = await _fixture.TourGuideService.TrackUserLocationAsync(user);
-            user.AddToVisitedLocations(visitedLocation);
 
             // Act
             Attraction[] attractions = await _fixture.TourGuideService.GetNearbyAttractionsAsync(visitedLocation);
@@ -103,15 +102,15 @@ namespace TourGuideTest
         public void GetTripDeals()
         {
             // Arrange
-            _fixture.Initialize(0); // Initialize the fixture
-            User user = new(Guid.NewGuid(), "jon", "000", "jon@tourGuide.com"); // Create a test user
+            _fixture.Initialize(0);
+            User user = new(Guid.NewGuid(), "jon", "000", "jon@tourGuide.com");
 
             // Act
-            List<Provider> providers = _fixture.TourGuideService.GetTripDeals(user); // Get trip deals for the user
-            _fixture.TourGuideService.Tracker.StopTracking(); // Stop tracking
+            List<Provider> providers = _fixture.TourGuideService.GetTripDeals(user);
+            _fixture.TourGuideService.Tracker.StopTracking();
 
             // Assert
-            Assert.Equal(10, providers.Count); // Verify that the expected number of providers is returned
+            Assert.Equal(10, providers.Count);
         }
     }
 }
